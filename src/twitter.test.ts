@@ -1,9 +1,17 @@
-import { findUrls, type Match } from './twitter.ts';
+import {
+  findUrls,
+  type TweetMatch,
+  type UidMatch,
+  type UsernameMatch,
+  type Match
+} from './twitter.ts';
+
+type Expect = Omit<TweetMatch, 'url'> | Omit<UidMatch, 'url'> | Omit<UsernameMatch, 'url'>;
 
 interface Test {
   name: string;
   body: string;
-  expect: Omit<Match, 'url'>[];
+  expect: Expect[];
 }
 
 /**
