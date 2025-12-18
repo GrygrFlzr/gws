@@ -313,9 +313,7 @@ function runtests() {
       console.info('Testing performance of 1000x separate string instances');
       {
         const { body } = test;
-        const instances = Array(1000)
-          .fill(0)
-          .map(() => `a`.repeat(3000) + body);
+        const instances = Array(1000).fill(`a`.repeat(3000) + body);
         const matches: number[] = [];
         const start = performance.now();
         for (const instance of instances) {
