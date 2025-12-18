@@ -1,0 +1,42 @@
+{
+  "name": "gws",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Message filtering discord bot",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "node index.ts",
+    "format": "prettier --write .",
+    "test:twitter": "node ./src/twitter.test.ts"
+  },
+  "keywords": [
+    "discord",
+    "twitter"
+  ],
+  "bugs": {
+    "url": "https://github.com/GrygrFlzr/gws/issues"
+  },
+  "repository": "github:GrygrFlzr/gws",
+  "author": "GrygrFlzr",
+  "license": "0BSD",
+  "packageManager": "pnpm@10.25.0",
+  "devDependencies": {
+    "@eslint/compat": "^2.0.0",
+    "@eslint/js": "^9.39.2",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/node": "^24.10.4",
+    "@typescript-eslint/eslint-plugin": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.0",
+    "discord.js": "^14.25.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.5.0",
+    "prettier": "^3.7.4",
+    "rollup": "^4.53.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.0"
+  }
+}
