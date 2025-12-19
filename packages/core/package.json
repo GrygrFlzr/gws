@@ -1,0 +1,37 @@
+{
+  "name": "@gws/core",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Shared core functionality for GWS",
+  "exports": {
+    ".": "./src/index.ts",
+    "./db": "./src/db/index.ts",
+    "./db/schema": "./src/db/schema.ts",
+    "./twitter": "./src/twitter/index.ts",
+    "./queue": "./src/queue/index.ts"
+  },
+  "scripts": {
+    "db:generate": "dotenv -e ../../.env drizzle-kit generate",
+    "db:migrate": "dotenv -e ../../.env drizzle-kit migrate",
+    "db:studio": "dotenv -e ../../.env drizzle-kit studio",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:bench": "vitest bench",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "postgres": "^3.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.4",
+    "@types/opossum": "^8.1.9",
+    "bullmq": "^5.66.1",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-orm": "^0.45.1",
+    "ioredis": "^5.8.2",
+    "opossum": "^9.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  }
+}

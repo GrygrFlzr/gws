@@ -1,10 +1,7 @@
-import {
-  findUrls,
-  type TweetMatch,
-  type UidMatch,
-  type UsernameMatch,
-  type Match
-} from './twitter.ts';
+import { performance } from 'node:perf_hooks';
+import { describe, it, expect } from 'vitest';
+import { findUrls } from './urlParser';
+import type { TweetMatch, UidMatch, UsernameMatch } from './types';
 
 type Expect = Omit<TweetMatch, 'url'> | Omit<UidMatch, 'url'> | Omit<UsernameMatch, 'url'>;
 
@@ -17,7 +14,7 @@ interface Test {
 /**
  * Test both correctness and worst-case performance
  */
-const tests: Test[] = [
+export const testCases: Test[] = [
   {
     name: 'Username containing substring "status"',
     body: 'anfjksnakfan https://x.com/status123 jkaenbdkjbsfkj',
@@ -262,68 +259,49 @@ const tests: Test[] = [
   }
 ] as const;
 
-function runtests() {
-  console.info('Asserting cases');
-  for (const test of tests) {
-    console.info(`\nCase: ${test.name}`);
-    const matches = findUrls(test.body);
-    if (test.body.length > 2000) {
-      console.info(`Note: test is ${test.body.length} characters long`);
-    }
-    let assertFailed = false;
-    if (test.expect.length !== matches.length) {
-      console.error(`Expected ${test.expect.length} matches, got ${matches.length} instead`);
-      assertFailed = true;
-    } else {
-      for (const expect of test.expect) {
-        const foundMatch = matches.find((match) =>
-          Object.entries(expect).every(([key, value]) => match[key] === value)
-        );
-        if (typeof foundMatch === 'undefined') {
-          console.error(`Expected result was not found:`);
-          console.error(JSON.stringify(expect, null, 2).replaceAll(/^/gm, '  '));
-          assertFailed = true;
-        } else {
-          Object.keys(foundMatch).forEach((key) => {
-            if (key === 'url') return;
-            if (!Object.prototype.hasOwnProperty.call(expect, key)) {
-              console.error(`Additional unexpected properties found on actual result: ${key}`);
-              assertFailed = true;
-            }
-          });
-        }
-      }
-    }
-    if (assertFailed) {
-      console.error('\nExpected:');
-      console.error(JSON.stringify(test.expect, null, 2).replaceAll(/^/gm, '  '));
-      console.error('Actual:');
-      console.error(JSON.stringify(matches, null, 2).replaceAll(/^/gm, '  '));
-    } else {
-      console.info('Validation OK, testing performance of 1000x instances in a single string');
-      {
-        const testString = test.body.repeat(1000);
-        const start = performance.now();
-        const matches: Match[] = findUrls(testString);
-        const end = performance.now();
-        // prevent JIT optimizing out `matches` by making sure we use it in the console.info
-        console.info(`Took ${end - start} ms (found ${matches.length})`);
-      }
+describe('Twitter URL Parser', () => {
+  describe('Correctness', () => {
+    testCases.forEach(({ name, body, expect: expected }) => {
+      it(name, () => {
+        const matches = findUrls(body);
 
-      console.info('Testing performance of 1000x separate string instances');
-      {
-        const { body } = test;
-        const instances = Array(1000).fill(`a`.repeat(3000) + body);
-        const matches: number[] = [];
-        const start = performance.now();
-        for (const instance of instances) {
-          matches.push(findUrls(instance).length);
+        // Check count
+        expect(matches).toHaveLength(expected.length);
+
+        // Check each expected result exists
+        for (const expectedMatch of expected) {
+          const found = matches.find((match) =>
+            Object.entries(expectedMatch).every(
+              ([key, value]) => (match as Record<string, string>)[key] === value
+            )
+          );
+
+          expect(found).toBeDefined();
+
+          // Ensure no unexpected properties (except 'url')
+          if (found) {
+            const unexpectedProps = Object.keys(found).filter(
+              (key) => key !== 'url' && !(key in expectedMatch)
+            );
+            expect(unexpectedProps).toHaveLength(0);
+          }
         }
-        const end = performance.now();
-        // prevent JIT optimizing out `matches` by making sure we use it in the console.info
-        console.info(`Took ${end - start} ms (found ${matches.length})`);
-      }
-    }
-  }
-}
-runtests();
+      });
+    });
+  });
+
+  describe('Performance - Boundary Cases', () => {
+    const boundaryTests = testCases.filter((t) => t.name.includes('Catastrophic'));
+
+    boundaryTests.forEach(({ name, body }) => {
+      it(`${name} - should complete in reasonable time`, () => {
+        const start = performance.now();
+        findUrls(body);
+        const duration = performance.now() - start;
+
+        // Should complete in under 100ms even for pathological cases
+        expect(duration).toBeLessThan(100);
+      });
+    });
+  });
+});

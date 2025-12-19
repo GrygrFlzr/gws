@@ -1,7 +1,6 @@
-const b64decode =
-  typeof atob === 'function'
-    ? (s: string) => atob(s)
-    : (s: string) => Buffer.from(s, 'base64').toString();
+import { Buffer } from 'node:buffer';
+import { Match, TweetMatch, UidMatch, UsernameMatch } from './types';
+const b64decode = (s: string) => Buffer.from(s, 'base64').toString();
 
 /**
  * User messages are at most 4000 characters long with nitro.
@@ -57,11 +56,6 @@ export const twitterDomains = [
     'eWlmZnguY29t'
   ].map(b64decode)
 ].map((s) => s.toLowerCase());
-
-export type TweetMatch = { url: string; tweetId: string };
-export type UidMatch = { url: string; userId: string };
-export type UsernameMatch = { url: string; username: string };
-export type Match = TweetMatch | UidMatch | UsernameMatch;
 
 const protocol = /https?:\/\//;
 const domain = /(?<domain>[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+(?::\d{1,5})?)/;

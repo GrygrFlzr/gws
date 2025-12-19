@@ -2,41 +2,46 @@
   "name": "gws",
   "private": true,
   "type": "module",
-  "version": "1.0.0",
   "description": "Message filtering discord bot",
   "main": "index.ts",
-  "scripts": {
-    "dev": "node index.ts",
-    "format": "prettier --write .",
-    "test:twitter": "node ./src/twitter.test.ts"
-  },
-  "keywords": [
-    "discord",
-    "twitter"
-  ],
   "bugs": {
     "url": "https://github.com/GrygrFlzr/gws/issues"
   },
   "repository": "github:GrygrFlzr/gws",
   "author": "GrygrFlzr",
   "license": "0BSD",
-  "packageManager": "pnpm@10.25.0",
+  "engines": {
+    "node": ">=24.12.0",
+    "pnpm": ">=10.26.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:watch": "pnpm --filter @gws/core test:watch",
+    "bench": "pnpm --filter @gws/core test:bench",
+    "db:generate": "pnpm --filter @gws/core db:generate",
+    "db:migrate": "pnpm --filter @gws/core db:migrate",
+    "db:studio": "pnpm --filter @gws/core db:studio",
+    "bot": "pnpm --filter @gws/bot dev",
+    "dashboard": "pnpm --filter @gws/dashboard dev",
+    "check": "turbo run check type-check",
+    "lint": "turbo run lint",
+    "lint:root": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "install:all": "pnpm install --frozen-lockfile"
+  },
   "devDependencies": {
-    "@eslint/compat": "^2.0.0",
-    "@eslint/js": "^9.39.2",
-    "@rollup/plugin-commonjs": "^29.0.0",
-    "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@types/node": "^24.10.4",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
-    "discord.js": "^14.25.1",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^16.5.0",
     "prettier": "^3.7.4",
-    "rollup": "^4.53.5",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0"
-  }
+    "turbo": "^2.6.3",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@10.26.0"
 }

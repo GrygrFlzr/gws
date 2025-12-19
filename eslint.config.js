@@ -1,22 +1,41 @@
-import { includeIgnoreFile } from '@eslint/compat';
-import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
 import { defineConfig } from 'eslint/config';
-import globals from 'globals';
+import eslint from '@eslint/js';
 import { fileURLToPath } from 'node:url';
-import ts from 'typescript-eslint';
+import { includeIgnoreFile } from '@eslint/compat';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+import prettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 
-export default defineConfig(
+export default defineConfig([
   includeIgnoreFile(gitignorePath),
-  js.configs.recommended,
-  ...ts.configs.recommended,
-  prettier,
+  eslint.configs.recommended,
   {
+    files: ['**/*.ts'],
     languageOptions: {
-      globals: { ...globals.browser, ...globals.node }
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module'
+      },
+      globals: {
+        ...globals.node,
+        ...globals.es2021
+      }
     },
-    rules: { 'no-undef': 'off' }
-  }
-);
+    plugins: {
+      '@typescript-eslint': tseslint
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn'
+    }
+  },
+  prettier
+]);

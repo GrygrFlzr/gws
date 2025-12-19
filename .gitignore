@@ -1,14 +1,53 @@
-node_modules
+# Dependencies
+node_modules/
+.pnpm-store/
 
-# Output
-/build
+# Environment
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Build outputs
+dist/
+build/
+.svelte-kit/
+coverage/
+
+# Database
+drizzle/
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Env
-.env
-.env.*
-!.env.example
-!.env.test
+# Editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Turbo
+.turbo/
+
+# Testing
+.vitest/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
