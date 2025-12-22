@@ -4,9 +4,9 @@
   "type": "module",
   "description": "Web dashboard for GWS management",
   "scripts": {
-    "dev": "dotenv -e ../../.env vite dev",
-    "build": "dotenv -e ../../.env vite build",
-    "preview": "dotenv -e ../../.env vite preview",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "type-check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -14,12 +14,7 @@
     "lint": "prettier --check . && eslint .",
     "test:unit": "vitest",
     "//test": "npm run test:unit -- --run",
-    "test": "echo \"No tests yet\" && exit 0",
-    "db:start": "docker compose up",
-    "db:push": "dotenv -e ../../.env drizzle-kit push",
-    "db:generate": "dotenv -e ../../.env drizzle-kit generate",
-    "db:migrate": "dotenv -e ../../.env drizzle-kit migrate",
-    "db:studio": "dotenv -e ../../.env drizzle-kit studio"
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "dependencies": {
     "postgres": "^3.4.7"
@@ -36,7 +31,6 @@
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^24.10.4",
     "@vitest/browser-playwright": "^4.0.16",
-    "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -47,7 +41,7 @@
     "prettier-plugin-svelte": "^3.4.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "svelte": "^5.46.0",
-    "svelte-check": "^4.3.4",
+    "svelte-check": "^4.3.5",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0",
