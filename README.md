@@ -8,8 +8,6 @@ A Discord bot that filters messages containing Twitter/X links based on configur
 - pnpm 10.26+
 - Docker (for local PostgreSQL and Redis)
 
-## Quick Start
-
 Install dependencies:
 
 ```bash
@@ -19,20 +17,12 @@ pnpm install --recursive
 Start development databases:
 
 ```bash
-docker compose -f infra/docker-compose.dev.yml up -d
+pnpm db:start
 ```
 
-Set up environment:
+Run database migrations:
 
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-Generate and run database migrations:
-
-```bash
-pnpm db:generate
 pnpm db:migrate
 ```
 
@@ -66,6 +56,9 @@ Development:
 
 Database:
 
+- `pnpm db:start` - Start PostgreSQL and Redis (Docker)
+- `pnpm db:stop` - Stop database containers
+- `pnpm db:logs` - View database logs
 - `pnpm db:generate` - Generate new migrations from schema changes
 - `pnpm db:migrate` - Run pending migrations
 - `pnpm db:studio` - Open Drizzle Studio (database GUI)
