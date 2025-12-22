@@ -1,5 +1,5 @@
-import type { Match, UserResult } from './types';
 import * as cacheQueries from '../db/queries/cache';
+import type { Match, UserResult } from './types';
 
 interface APIHealth {
   successCount: number;

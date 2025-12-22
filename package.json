@@ -36,6 +36,7 @@
     "install:all": "pnpm install --frozen-lockfile"
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "catalog:",
     "dotenv": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",

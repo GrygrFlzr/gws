@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
+import type { Match } from '../../twitter/types';
 import { db } from '../client';
 import { twitterUserCache } from '../schema';
-import type { Match } from '../../twitter/types';
 
 export async function getCachedUser(match: Match) {
   let userId: bigint | undefined;

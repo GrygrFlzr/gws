@@ -1,6 +1,6 @@
-import type { Message } from 'discord.js';
-import { findUrls } from '@gws/core/twitter';
 import { messageQueries } from '@gws/core';
+import { findUrls } from '@gws/core/twitter';
+import type { Message } from 'discord.js';
 import { urlResolutionQueue } from '../queue/queues';
 
 export async function handleMessage(message: Message) {

@@ -1,10 +1,10 @@
-import { defineConfig } from 'eslint/config';
-import eslint from '@eslint/js';
 import { fileURLToPath, URL } from 'node:url';
 import { includeIgnoreFile } from '@eslint/compat';
-import { plugin as tseslint, parser as tsparser } from 'typescript-eslint';
+import eslint from '@eslint/js';
 import prettier from 'eslint-config-prettier';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
+import { plugin as tseslint, parser as tsparser } from 'typescript-eslint';
 
 const gitignorePath = fileURLToPath(new URL('./.gitignore', import.meta.url));
 

@@ -1,7 +1,7 @@
-import { eq } from 'drizzle-orm';
 import { db } from '@gws/core';
 import { pendingMessages } from '@gws/core/db/schema';
 import type { Match } from '@gws/core/twitter';
+import { eq } from 'drizzle-orm';
 import { urlResolutionQueue } from '../queue/queues';
 
 export async function recoverPendingMessages() {

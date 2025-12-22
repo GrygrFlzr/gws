@@ -1,18 +1,18 @@
+import { eq, isNull, relations, sql } from 'drizzle-orm';
 import {
-  pgTable,
-  serial,
   bigint,
-  varchar,
+  boolean,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  serial,
   text,
   timestamp,
-  boolean,
-  jsonb,
-  integer,
-  index,
   uniqueIndex,
-  primaryKey
+  varchar
 } from 'drizzle-orm/pg-core';
-import { relations, eq, isNull, sql } from 'drizzle-orm';
 
 // Guilds
 export const guilds = pgTable('guilds', {
@@ -255,3 +255,30 @@ export const apiFailures = pgTable(
   },
   (table) => [index('idx_api_failures_timestamp').on(table.api, table.timestamp)]
 );
+
+// Auth
+export const sessions = pgTable('sessions', {
+  id: varchar('id', { length: 255 }).primaryKey(),
+  userId: bigint('user_id', { mode: 'bigint' }).notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  discordAccessToken: text('discord_access_token').notNull(),
+  discordRefreshToken: text('discord_refresh_token'),
+  discordTokenExpiresAt: timestamp('discord_token_expires_at', { withTimezone: true })
+});
+
+export const users = pgTable('users', {
+  id: bigint('id', { mode: 'bigint' }).primaryKey(), // Discord user ID
+  username: varchar('username', { length: 32 }).notNull(),
+  discriminator: varchar('discriminator', { length: 4 }),
+  avatar: varchar('avatar', { length: 255 }),
+  email: varchar('email', { length: 255 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
+});
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id]
+  })
+}));

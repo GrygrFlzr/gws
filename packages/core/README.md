@@ -17,9 +17,9 @@ This package is consumed by the bot and dashboard packages. It is not meant to b
 Import from other packages:
 
 ```ts
-import { db, blocklistQueries } from '@gws/core/db';
-import { findUrls } from '@gws/core/twitter';
+import { blocklistQueries, db } from '@gws/core/db';
 import { urlResolutionQueue } from '@gws/core/queue';
+import { findUrls } from '@gws/core/twitter';
 ```
 
 ## Database Operations

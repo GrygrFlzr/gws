@@ -1,6 +1,6 @@
+import { actionQueries, guildQueries, messageQueries } from '@gws/core';
 import { Worker, type Job } from 'bullmq';
 import type { Client, TextChannel } from 'discord.js';
-import { guildQueries, actionQueries, messageQueries } from '@gws/core';
 import { connection } from '../queue/connection';
 
 interface BlacklistedUser {

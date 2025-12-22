@@ -1,4 +1,4 @@
-import { sql, and, eq, ne } from 'drizzle-orm';
+import { and, eq, ne, sql } from 'drizzle-orm';
 import { db } from './client';
 import { twitterUsernameHistory, usernameChangeAnalytics } from './schema';
 

@@ -1,6 +1,6 @@
-import { eq, and, isNull, inArray } from 'drizzle-orm';
+import { and, eq, inArray, isNull } from 'drizzle-orm';
 import { db } from '../client';
-import { blocklists, blocklistEntries, guildBlocklistSubscriptions } from '../schema';
+import { blocklistEntries, blocklists, guildBlocklistSubscriptions } from '../schema';
 
 export async function getGuildBlocklists(guildId: bigint) {
   return db.query.guildBlocklistSubscriptions.findMany({

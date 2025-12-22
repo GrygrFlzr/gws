@@ -1,4 +1,4 @@
-import { eq, and, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { db } from '../client';
 import { actionLog, offenderAnalytics, violationLog } from '../schema';
 

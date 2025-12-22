@@ -1,7 +1,7 @@
+import { cacheQueries, messageQueries } from '@gws/core';
+import type { Match, UserResult } from '@gws/core/twitter';
 import { Worker, type Job } from 'bullmq';
 import CircuitBreaker from 'opossum';
-import type { Match, UserResult } from '@gws/core/twitter';
-import { cacheQueries, messageQueries } from '@gws/core';
 import { connection } from '../queue/connection';
 
 // Type guards for API responses

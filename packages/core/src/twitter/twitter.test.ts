@@ -1,7 +1,7 @@
 import { performance } from 'node:perf_hooks';
-import { describe, it, expect } from 'vitest';
-import { findUrls } from './urlParser';
+import { describe, expect, it } from 'vitest';
 import type { TweetMatch, UidMatch, UsernameMatch } from './types';
+import { findUrls } from './urlParser';
 
 type Expect = Omit<TweetMatch, 'url'> | Omit<UidMatch, 'url'> | Omit<UsernameMatch, 'url'>;
 

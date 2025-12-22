@@ -1,5 +1,5 @@
-import { defineConfig } from 'tsdown';
 import dotenv from 'dotenv';
+import { defineConfig } from 'tsdown';
 
 dotenv.config({ path: '../../.env' });
 export default defineConfig({
