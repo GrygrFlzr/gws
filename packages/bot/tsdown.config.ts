@@ -1,5 +1,7 @@
 import { defineConfig } from 'tsdown';
+import dotenv from 'dotenv';
 
+dotenv.config({ path: '../../.env' });
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm'],

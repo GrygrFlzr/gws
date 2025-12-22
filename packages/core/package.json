@@ -25,14 +25,15 @@
     "postgres": "^3.4.7"
   },
   "devDependencies": {
-    "@types/node": "^24.10.4",
+    "@types/node": "catalog:",
     "@types/opossum": "^8.1.9",
     "bullmq": "^5.66.2",
+    "dotenv": "catalog:",
     "drizzle-kit": "^0.31.8",
-    "drizzle-orm": "^0.45.1",
+    "drizzle-orm": "catalog:",
     "ioredis": "^5.8.2",
     "opossum": "^9.0.0",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.16"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

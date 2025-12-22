@@ -1,9 +1,8 @@
 import { defineConfig } from 'eslint/config';
 import eslint from '@eslint/js';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 import { includeIgnoreFile } from '@eslint/compat';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsparser from '@typescript-eslint/parser';
+import { plugin as tseslint, parser as tsparser } from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 

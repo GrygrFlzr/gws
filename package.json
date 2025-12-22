@@ -33,15 +33,14 @@
     "install:all": "pnpm install --frozen-lockfile"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.50.0",
-    "@typescript-eslint/parser": "^8.50.0",
-    "dotenv-cli": "^11.0.0",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "globals": "^16.5.0",
-    "prettier": "^3.7.4",
-    "turbo": "^2.7.1",
-    "typescript": "^5.9.3"
+    "dotenv": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "globals": "catalog:",
+    "prettier": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   },
   "packageManager": "pnpm@10.26.0"
 }
