@@ -1,6 +1,7 @@
 import { actionQueries, guildQueries, messageQueries } from '@gws/core';
 import { Worker, type Job } from 'bullmq';
 import type { Client, TextChannel } from 'discord.js';
+import { db } from '../db';
 import { connection } from '../queue/connection';
 
 interface BlacklistedUser {
@@ -25,13 +26,13 @@ export function createActionExecutor(discordClient: Client) {
     async (job: Job<ActionJob>) => {
       const { messageId, guildId, channelId, authorId, blacklistedUsers } = job.data;
 
-      const config = await guildQueries.getActionConfig(BigInt(guildId), BigInt(channelId));
+      const config = await guildQueries.getActionConfig(db, BigInt(guildId), BigInt(channelId));
 
       const channel = (await discordClient.channels.fetch(channelId)) as TextChannel;
       const message = await channel.messages.fetch(messageId).catch(() => null);
 
       if (!message) {
-        await messageQueries.updatePendingMessage(BigInt(messageId), {
+        await messageQueries.updatePendingMessage(db, BigInt(messageId), {
           state: 'failed'
         });
         return { success: false, reason: 'message_not_found' };
@@ -71,7 +72,7 @@ export function createActionExecutor(discordClient: Client) {
       }
 
       // 4. Record action
-      await actionQueries.recordAction({
+      await actionQueries.recordAction(db, {
         messageId: BigInt(messageId),
         guildId: BigInt(guildId),
         channelId: BigInt(channelId),
@@ -81,14 +82,14 @@ export function createActionExecutor(discordClient: Client) {
       });
 
       // 5. Update pending message
-      await messageQueries.updatePendingMessage(BigInt(messageId), {
+      await messageQueries.updatePendingMessage(db, BigInt(messageId), {
         state: 'actioned',
         actionData: actions,
         completedAt: new Date()
       });
 
       // 6. Track offender
-      await actionQueries.recordOffender({
+      await actionQueries.recordOffender(db, {
         guildId: BigInt(guildId),
         authorId: BigInt(authorId),
         blacklistedUserIds: blacklistedUsers.map((u) => BigInt(u.userId)),

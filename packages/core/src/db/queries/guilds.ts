@@ -1,10 +1,10 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../client';
+import type { Database } from '../client';
 import { guilds } from '../schema';
 
 // TODO: implement channel overrides
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getActionConfig(guildId: bigint, channelId: bigint) {
+export async function getActionConfig(db: Database, guildId: bigint, channelId: bigint) {
   const guild = await db.query.guilds.findFirst({
     where: eq(guilds.guildId, guildId)
   });

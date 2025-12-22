@@ -1,6 +1,7 @@
 import { messageQueries } from '@gws/core';
 import { findUrls } from '@gws/core/twitter';
 import type { Message } from 'discord.js';
+import { db } from '../db';
 import { urlResolutionQueue } from '../queue/queues';
 
 export async function handleMessage(message: Message) {
@@ -24,6 +25,6 @@ export async function handleMessage(message: Message) {
     urlResolutionQueue.add('resolve-urls', messageData, {
       jobId: `msg-${message.id}`
     }),
-    messageQueries.storePendingMessage(messageData)
+    messageQueries.storePendingMessage(db, messageData)
   ]);
 }

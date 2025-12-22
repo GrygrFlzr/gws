@@ -1,5 +1,6 @@
-import { db, schema } from '@gws/core/db';
+import { schema } from '@gws/core/db';
 import { and, eq, isNull } from 'drizzle-orm';
+import { db } from '../db';
 
 export async function checkAgainstBlocklists(
   guildId: bigint,

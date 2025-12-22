@@ -1,8 +1,8 @@
 import { and, eq, inArray, isNull } from 'drizzle-orm';
-import { db } from '../client';
+import type { Database } from '../client';
 import { blocklistEntries, blocklists, guildBlocklistSubscriptions } from '../schema';
 
-export async function getGuildBlocklists(guildId: bigint) {
+export async function getGuildBlocklists(db: Database, guildId: bigint) {
   return db.query.guildBlocklistSubscriptions.findMany({
     where: eq(guildBlocklistSubscriptions.guildId, guildId),
     with: {
@@ -18,11 +18,11 @@ export async function getGuildBlocklists(guildId: bigint) {
 }
 
 export async function checkAgainstBlocklists(
+  db: Database,
   guildId: bigint,
   channelId: bigint,
   twitterUserIds: bigint[]
 ) {
-  // Get all active blocklists for this guild
   const result = await db
     .select({
       blocklistId: blocklists.id,
@@ -45,21 +45,23 @@ export async function checkAgainstBlocklists(
       )
     );
 
-  // Filter by channel overrides
   return result.filter((row) => {
     const overrides = row.channelOverrides?.[channelId.toString()];
     return overrides?.enabled !== false;
   });
 }
 
-export async function addBlocklistEntry(data: {
-  blocklistId: number;
-  twitterUserId: bigint;
-  twitterUsername: string;
-  publicReason?: string;
-  privateReason?: string;
-  evidenceUrls?: string[];
-  addedByUserId: bigint;
-}) {
+export async function addBlocklistEntry(
+  db: Database,
+  data: {
+    blocklistId: number;
+    twitterUserId: bigint;
+    twitterUsername: string;
+    publicReason?: string;
+    privateReason?: string;
+    evidenceUrls?: string[];
+    addedByUserId: bigint;
+  }
+) {
   return db.insert(blocklistEntries).values(data).returning();
 }

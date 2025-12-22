@@ -2,6 +2,7 @@ import { cacheQueries, messageQueries } from '@gws/core';
 import type { Match, UserResult } from '@gws/core/twitter';
 import { Worker, type Job } from 'bullmq';
 import CircuitBreaker from 'opossum';
+import { db } from '../db';
 import { connection } from '../queue/connection';
 
 // Type guards for API responses
@@ -86,7 +87,7 @@ async function fetchVxTwitter(match: Match): Promise<UserResult> {
   if (data.user_screen_name) {
     // For tweets, try to get user ID from cache
     const username = data.user_screen_name;
-    const cachedUserId = await cacheQueries.getUserIdByUsername(username);
+    const cachedUserId = await cacheQueries.getUserIdByUsername(db, username);
 
     if (cachedUserId) {
       return {
@@ -139,7 +140,7 @@ type ResolvedUser = {
 
 async function resolveTwitterUser(match: Match): Promise<ResolvedUser | null> {
   // 1. Check cache first
-  const cached = await cacheQueries.getCachedUser(match);
+  const cached = await cacheQueries.getCachedUser(db, match);
   if (cached && Date.now() - cached.cachedAt < 24 * 60 * 60 * 1000) {
     return cached as ResolvedUser;
   }
@@ -148,7 +149,7 @@ async function resolveTwitterUser(match: Match): Promise<ResolvedUser | null> {
   try {
     if (!fxBreaker.opened) {
       const result = await fxBreaker.fire(match);
-      await cacheQueries.cacheUser(result);
+      await cacheQueries.cacheUser(db, result);
       return { ...result, source: 'fx' };
     }
   } catch (err) {
@@ -163,16 +164,16 @@ async function resolveTwitterUser(match: Match): Promise<ResolvedUser | null> {
       // vx doesn't give us userId directly for tweets
       // Try to resolve from username
       if ('tweetId' in match && result.username && !result.userId) {
-        const userId = await cacheQueries.getUserIdByUsername(result.username);
+        const userId = await cacheQueries.getUserIdByUsername(db, result.username);
         if (userId) {
-          await cacheQueries.cacheUser({ userId, username: result.username });
+          await cacheQueries.cacheUser(db, { userId, username: result.username });
           return { userId, username: result.username, source: 'vx' };
         }
       }
 
       // For username matches or when we have userId
       if (result.userId) {
-        await cacheQueries.cacheUser(result);
+        await cacheQueries.cacheUser(db, result);
         return { userId: result.userId, username: result.username, source: 'vx' };
       }
 
@@ -219,7 +220,7 @@ export const urlResolverWorker = new Worker<UrlResolutionJob>(
 
     if (unresolved.length > 0) {
       // Update pending message state
-      await messageQueries.updatePendingMessage(BigInt(messageId), {
+      await messageQueries.updatePendingMessage(db, BigInt(messageId), {
         state: 'failed',
         resolutionData: {
           resolved: resolved.length,

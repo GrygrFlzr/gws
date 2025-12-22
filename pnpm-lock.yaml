@@ -12,6 +12,9 @@ catalogs:
     '@types/node':
       specifier: ^24.10.4
       version: 24.10.4
+    discord.js:
+      specifier: ^14.25.1
+      version: 14.25.1
     dotenv:
       specifier: ^17.2.3
       version: 17.2.3
@@ -91,7 +94,7 @@ importers:
         specifier: ^5.66.2
         version: 5.66.2
       discord.js:
-        specifier: ^14.25.1
+        specifier: 'catalog:'
         version: 14.25.1
       drizzle-orm:
         specifier: 'catalog:'
@@ -200,6 +203,9 @@ importers:
       arctic:
         specifier: ^3.7.0
         version: 3.7.0
+      discord.js:
+        specifier: 'catalog:'
+        version: 14.25.1
       drizzle-orm:
         specifier: 'catalog:'
         version: 0.45.1(postgres@3.4.7)

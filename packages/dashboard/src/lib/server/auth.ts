@@ -1,9 +1,9 @@
-import { db } from '@gws/core/db';
 import { sessions, users } from '@gws/core/db/schema';
 import { encodeBase32LowerCaseNoPadding } from '@oslojs/encoding';
 import { DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, ORIGIN } from '$env/static/private';
 import { Discord } from 'arctic';
 import { eq } from 'drizzle-orm';
+import { db } from './db';
 
 export const discord = new Discord(
   DISCORD_CLIENT_ID,

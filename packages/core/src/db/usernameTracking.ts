@@ -1,8 +1,13 @@
 import { and, eq, ne, sql } from 'drizzle-orm';
-import { db } from './client';
+import type { Database } from './client';
 import { twitterUsernameHistory, usernameChangeAnalytics } from './schema';
 
-export async function recordUsername(userId: bigint, username: string, source: string) {
+export async function recordUsername(
+  db: Database,
+  userId: bigint,
+  username: string,
+  source: string
+) {
   // Try to insert new username
   const result = await db
     .insert(twitterUsernameHistory)
@@ -62,9 +67,10 @@ export async function recordUsername(userId: bigint, username: string, source: s
 // Helper function that combines API fetching with username tracking
 // This should be called from the bot package after fetching from APIs
 export async function trackUserFromApiResult(
+  db: Database,
   userId: bigint,
   username: string,
   source: 'fx' | 'vx'
 ) {
-  await recordUsername(userId, username, `${source}_api`);
+  await recordUsername(db, userId, username, `${source}_api`);
 }

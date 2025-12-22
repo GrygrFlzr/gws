@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
 import type { Match } from '../../twitter/types';
-import { db } from '../client';
+import type { Database } from '../client';
 import { twitterUserCache } from '../schema';
 
-export async function getCachedUser(match: Match) {
+export async function getCachedUser(db: Database, match: Match) {
   let userId: bigint | undefined;
 
   if ('tweetId' in match) {
@@ -39,7 +39,10 @@ export async function getCachedUser(match: Match) {
     : null;
 }
 
-export async function cacheUser(data: { userId: string; username: string; data?: unknown }) {
+export async function cacheUser(
+  db: Database,
+  data: { userId: string; username: string; data?: unknown }
+) {
   return db
     .insert(twitterUserCache)
     .values({
@@ -57,7 +60,7 @@ export async function cacheUser(data: { userId: string; username: string; data?:
     });
 }
 
-export async function getUserIdByUsername(username: string) {
+export async function getUserIdByUsername(db: Database, username: string) {
   const result = await db.query.twitterUserCache.findFirst({
     where: eq(twitterUserCache.username, username)
   });

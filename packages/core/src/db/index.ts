@@ -1,4 +1,5 @@
-export * from './client';
+export { createDatabase } from './client';
+export type { Database } from './client';
 export * as schema from './schema';
 export * from './queries/blocklists';
 export * from './queries/messages';

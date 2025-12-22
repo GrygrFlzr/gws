@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { isRedirect, redirect } from '@sveltejs/kit';
 import { createSession, discord, getOrCreateUser } from '$lib/server/auth';
 import type { RequestHandler } from './$types';
 
@@ -56,6 +56,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
     redirect(302, '/guilds');
   } catch (error) {
+    if (isRedirect(error)) throw error;
     console.error('OAuth error:', error);
     return new Response('Authentication failed', { status: 500 });
   }

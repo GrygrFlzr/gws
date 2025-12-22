@@ -1,27 +1,33 @@
 import { and, eq, sql } from 'drizzle-orm';
-import { db } from '../client';
+import type { Database } from '../client';
 import { actionLog, offenderAnalytics, violationLog } from '../schema';
 
-export async function recordAction(data: {
-  messageId: bigint;
-  guildId: bigint;
-  channelId: bigint;
-  authorId: bigint;
-  matchedUserIds: bigint[];
-  actionsTaken: unknown;
-}) {
+export async function recordAction(
+  db: Database,
+  data: {
+    messageId: bigint;
+    guildId: bigint;
+    channelId: bigint;
+    authorId: bigint;
+    matchedUserIds: bigint[];
+    actionsTaken: unknown;
+  }
+) {
   return db.insert(actionLog).values({
     ...data,
     createdAt: sql`NOW()`
   });
 }
 
-export async function recordOffender(data: {
-  guildId: bigint;
-  authorId: bigint;
-  blacklistedUserIds: bigint[];
-  timestamp: Date;
-}) {
+export async function recordOffender(
+  db: Database,
+  data: {
+    guildId: bigint;
+    authorId: bigint;
+    blacklistedUserIds: bigint[];
+    timestamp: Date;
+  }
+) {
   // Insert violation log entry
   await db.insert(violationLog).values({
     guildId: data.guildId,
