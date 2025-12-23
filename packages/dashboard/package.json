@@ -13,8 +13,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "test:unit": "vitest",
-    "//test": "npm run test:unit -- --run",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test": "npm run test:unit -- --run"
   },
   "dependencies": {
     "postgres": "^3.4.7"

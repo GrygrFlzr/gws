@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
+  import Button from '$lib/components/Button.svelte';
   import './layout.css';
 
   const { data, children } = $props();
   const { user } = $derived(data);
+
+  let isLoggingOut = $state(false);
 </script>
 
 <div class="min-h-screen bg-gray-50">
@@ -28,23 +32,23 @@
               <span class="text-sm text-gray-700">
                 {user.username}
               </span>
-              <form method="POST" action="/auth/logout">
-                <button
-                  type="submit"
-                  class="rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
-                >
-                  Sign out
-                </button>
+              <form
+                method="POST"
+                action="/auth/logout"
+                use:enhance={() => {
+                  isLoggingOut = true;
+                  return async ({ update }) => {
+                    await update();
+                    isLoggingOut = false;
+                  };
+                }}
+              >
+                <Button type="submit" variant="secondary" loading={isLoggingOut}>Sign out</Button>
               </form>
             </div>
           {:else}
             <form method="POST" action="/auth/login">
-              <button
-                type="submit"
-                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-              >
-                Sign in with Discord
-              </button>
+              <Button type="submit" variant="primary">Sign in with Discord</Button>
             </form>
           {/if}
         </div>

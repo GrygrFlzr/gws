@@ -12,7 +12,7 @@ export const discord = new Discord(
 );
 
 function generateSessionId(): string {
-  const bytes = new Uint8Array(20); // 160-bit
+  const bytes = new Uint8Array(20);
   crypto.getRandomValues(bytes);
   return encodeBase32LowerCaseNoPadding(bytes);
 }
@@ -39,6 +39,45 @@ export async function createSession(
   return sessionId;
 }
 
+export async function refreshDiscordToken(session: typeof sessions.$inferSelect) {
+  if (!session.discordRefreshToken) {
+    throw new Error('No refresh token available');
+  }
+
+  // Check if token needs refreshing (expires in < 5 minutes)
+  const needsRefresh =
+    !session.discordTokenExpiresAt ||
+    session.discordTokenExpiresAt.getTime() < Date.now() + 5 * 60 * 1000;
+
+  if (!needsRefresh) {
+    return session;
+  }
+
+  try {
+    const tokens = await discord.refreshAccessToken(session.discordRefreshToken);
+
+    const newTokenExpiresAt = new Date(Date.now() + tokens.accessTokenExpiresInSeconds() * 1000);
+
+    // Update session with new tokens
+    const [updatedSession] = await db
+      .update(sessions)
+      .set({
+        discordAccessToken: tokens.accessToken(),
+        discordRefreshToken: tokens.refreshToken() ?? session.discordRefreshToken,
+        discordTokenExpiresAt: newTokenExpiresAt
+      })
+      .where(eq(sessions.id, session.id))
+      .returning();
+
+    return updatedSession;
+  } catch (err) {
+    console.error('Failed to refresh Discord token:', err);
+    // Delete invalid session
+    await db.delete(sessions).where(eq(sessions.id, session.id));
+    throw new Error('Token refresh failed');
+  }
+}
+
 export async function validateSession(sessionId: string) {
   const result = await db
     .select({
@@ -62,15 +101,14 @@ export async function validateSession(sessionId: string) {
     return null;
   }
 
-  // Refresh session if it's close to expiring (< 15 days)
-  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-    await db
-      .update(sessions)
-      .set({ expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30) })
-      .where(eq(sessions.id, sessionId));
+  // Try to refresh Discord token if needed
+  try {
+    const refreshedSession = await refreshDiscordToken(session);
+    return { session: refreshedSession, user };
+  } catch (err) {
+    console.error('Session validation failed:', err);
+    return null;
   }
-
-  return { session, user };
 }
 
 export async function invalidateSession(sessionId: string) {
@@ -91,7 +129,6 @@ export async function getOrCreateUser(discordUser: {
   });
 
   if (existing) {
-    // Update user info
     await db
       .update(users)
       .set({
@@ -106,7 +143,6 @@ export async function getOrCreateUser(discordUser: {
     return existing;
   }
 
-  // Create new user
   const [newUser] = await db
     .insert(users)
     .values({
