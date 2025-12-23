@@ -13,6 +13,7 @@ import {
   uniqueIndex,
   varchar
 } from 'drizzle-orm/pg-core';
+import type { DiscordGuildPartial } from '../discord/types';
 
 // Guilds
 export const guilds = pgTable('guilds', {
@@ -269,9 +270,12 @@ export const sessions = pgTable('sessions', {
 export const users = pgTable('users', {
   id: bigint('id', { mode: 'bigint' }).primaryKey(), // Discord user ID
   username: varchar('username', { length: 32 }).notNull(),
+  globalName: varchar('global_name', { length: 64 }),
   discriminator: varchar('discriminator', { length: 4 }),
   avatar: varchar('avatar', { length: 255 }),
   email: varchar('email', { length: 255 }),
+  guildsCache: jsonb('guilds_cache').$type<DiscordGuildPartial[]>(),
+  guildsCacheAt: timestamp('guilds_cache_at'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull()
 });

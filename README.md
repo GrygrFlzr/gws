@@ -1,110 +1,56 @@
-# GWS - Message Filtering Discord Bot
+# GWS - Bonk System
 
-A Discord bot that filters messages containing Twitter/X links based on configurable blocklists.
+A Discord bot for VTuber communities to identify and action Twitter links based on blocklists.
+
+## Features
+
+- ID Extraction: Bypasses name changes and link mirrors to identify the true author ID.
+- API resolution: Resolution with health-scored rotation between FxTwitter and VxTwitter mirrors.
+- Enforcement: Response protocols (React, Delete, Reply) for flagged accounts.
+- Dashboard: Interface for server administrators.
 
 ## Prerequisites
 
 - Node.js 24.12+
 - pnpm 10.26+
-- Docker (for local PostgreSQL and Redis)
+- Docker (for PostgreSQL and Redis)
 
-Install dependencies:
+## Getting Started
 
-```bash
-pnpm install --recursive
-```
+1. Install dependencies:
 
-Start development databases:
+   ```bash
+   pnpm install
+   ```
 
-```bash
-pnpm db:start
-```
+2. Initialize Infrastructure:
 
-Run database migrations:
+   ```bash
+   pnpm db:start
+   pnpm db:migrate
+   ```
 
-```bash
-pnpm db:migrate
-```
-
-Start development servers:
-
-```bash
-pnpm dev
-```
-
-This starts both the Discord bot and the web dashboard in parallel.
+3. Launch:
+   ```bash
+   pnpm dev
+   ```
 
 ## Project Structure
 
 ```
 gws/
 ├── packages/
-│   ├── core/       # Shared business logic, database schemas, Twitter parsing
-│   ├── bot/        # Discord bot and background workers
-│   └── dashboard/  # SvelteKit web interface for management
-├── infra/          # Docker configurations
-└── scripts/        # Utility scripts
+│   ├── core/       # Shared client, schemas, and Twitter parsing
+│   ├── bot/        # Discord listener and background workers
+│   └── dashboard/  # SvelteKit interface
+└── infra/          # Container configurations
 ```
-
-## Available Commands
-
-Development:
-
-- `pnpm dev` - Start all services in development mode
-- `pnpm bot` - Start only the Discord bot
-- `pnpm dashboard` - Start only the web dashboard
-
-Database:
-
-- `pnpm db:start` - Start PostgreSQL and Redis (Docker)
-- `pnpm db:stop` - Stop database containers
-- `pnpm db:logs` - View database logs
-- `pnpm db:generate` - Generate new migrations from schema changes
-- `pnpm db:migrate` - Run pending migrations
-- `pnpm db:studio` - Open Drizzle Studio (database GUI)
-
-Testing:
-
-- `pnpm test` - Run all tests
-- `pnpm test:watch` - Run tests in watch mode
-- `pnpm bench` - Run performance benchmarks
-
-Code quality:
-
-- `pnpm lint` - Lint all packages
-- `pnpm format` - Format code with Prettier
-- `pnpm check` - Type-check all packages
-
-Build:
-
-- `pnpm build` - Build all packages for production
-
-## Configuration
-
-Environment variables are defined in `.env`:
-
-- `DATABASE_URL` - PostgreSQL connection string
-- `REDIS_URL` - Redis connection string
-- `DISCORD_TOKEN` - Discord bot token
-- `DISCORD_CLIENT_ID` - Discord application client ID
-- `DISCORD_CLIENT_SECRET` - Discord OAuth2 client secret
 
 ## Architecture
 
-The system consists of three main components:
-
-1. Core Package: Shared logic
-   - Database schemas (Drizzle ORM)
-   - Twitter URL parsing
-   - API clients for fetching Twitter user data
-2. Discord Bot
-   - Listens for messages
-   - Queues Twitter URLs for resolution
-   - Executes moderation actions based on blocklist configuration
-3. Web Dashboard
-   - SvelteKit application for managing blocklists, viewing analytics, and configuring guild settings
-
-Jobs are queued using BullMQ with Redis for persistence and automatic retries.
+1. Core: Handles domain parsing and author identification.
+2. Bot: Message monitoring and response.
+3. Dashboard: Configuration and legal compliance.
 
 ## License
 

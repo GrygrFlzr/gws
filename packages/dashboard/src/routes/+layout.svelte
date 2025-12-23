@@ -1,36 +1,49 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
+  import { page } from '$app/state';
   import Button from '$lib/components/Button.svelte';
+  import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import './layout.css';
 
   const { data, children } = $props();
-  const { user } = $derived(data);
+  const { user, theme } = $derived(data);
 
   let isLoggingOut = $state(false);
+
+  const footerLinks = [
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/terms', label: 'Terms of Service' },
+    { href: '/data-deletion', label: 'Data Deletion' },
+    { href: '/attributions', label: 'Attributions' }
+  ];
 </script>
 
-<div class="min-h-screen bg-gray-50">
-  <nav class="bg-white shadow-sm">
+<div class="flex min-h-screen flex-col bg-gray-50">
+  <nav class="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 justify-between">
         <div class="flex">
-          <a href="/" class="flex shrink-0 items-center">
+          <a
+            href="/"
+            class="flex shrink-0 items-center transition-all hover:scale-105 active:scale-95"
+          >
             <h1 class="text-xl font-bold">GWS Dashboard</h1>
           </a>
         </div>
 
-        <div class="flex items-center">
+        <div class="flex items-center gap-4">
+          <ThemeToggle currentTheme={theme} />
           {#if user}
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 border-l border-gray-200 pl-4">
               {#if user.avatar}
                 <img
                   src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png"
-                  alt={user.username}
-                  class="h-8 w-8 rounded-full"
+                  alt={user.globalName ?? user.username}
+                  class="h-8 w-8 rounded-full shadow-sm"
                 />
               {/if}
-              <span class="text-sm text-gray-700">
-                {user.username}
+              <span class="hidden text-sm font-medium text-gray-700 sm:block">
+                {user.globalName ?? user.username}
               </span>
               <form
                 method="POST"
@@ -56,7 +69,39 @@
     </div>
   </nav>
 
-  <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <main class="flex-1 overflow-x-clip">
     {@render children()}
   </main>
+
+  <footer class="border-t border-gray-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <p class="text-sm text-gray-500">
+          Released under <a
+            href="https://github.com/GrygrFlzr/gws/blob/main/LICENSE"
+            class="underline transition-colors hover:text-sky-600">BSD Zero Clause</a
+          >. View on
+          <a
+            href="https://github.com/GrygrFlzr/gws"
+            class="underline transition-colors hover:text-sky-600">GitHub</a
+          >.
+        </p>
+        <nav class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          {#each footerLinks as link}
+            <a
+              href={link.href}
+              class={[
+                'text-sm transition-all hover:scale-110 active:scale-90',
+                page.url.pathname === link.href
+                  ? 'font-bold text-sky-600'
+                  : 'text-gray-500 hover:text-gray-900'
+              ]}
+            >
+              {link.label}
+            </a>
+          {/each}
+        </nav>
+      </div>
+    </div>
+  </footer>
 </div>

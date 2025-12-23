@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-import { Match, TweetMatch, UidMatch, UsernameMatch } from './types';
+import type { Match, TweetMatch, UidMatch, UsernameMatch } from './types';
 
 const b64decode = (s: string) => Buffer.from(s, 'base64').toString();
 

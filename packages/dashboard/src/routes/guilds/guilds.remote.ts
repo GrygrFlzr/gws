@@ -1,8 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { getRequestEvent, query } from '$app/server';
-import { discordAPI, type DiscordGuildPartial } from '$lib/server/discord';
-
-const MANAGE_GUILD = 1n << 5n;
+import { fetchUserGuilds, hasPermission, Permissions } from '$lib/server/discord';
 
 export const getManageableGuilds = query(async () => {
   const event = getRequestEvent();
@@ -14,13 +12,12 @@ export const getManageableGuilds = query(async () => {
   const token = event.locals.session.discordAccessToken;
 
   // Fetch guilds using the rate-limited client
-  const guilds = await discordAPI.fetch<DiscordGuildPartial[]>('/users/@me/guilds', token);
+  const guilds = await fetchUserGuilds(token);
 
   // Filter for guilds where user has MANAGE_GUILD permission
-  const manageableGuilds = guilds.filter((guild) => {
-    const permissions = BigInt(guild.permissions);
-    return (permissions & MANAGE_GUILD) === MANAGE_GUILD;
-  });
+  const manageableGuilds = guilds.filter((guild) =>
+    hasPermission(guild.permissions, Permissions.MANAGE_GUILD)
+  );
 
   return manageableGuilds;
 });

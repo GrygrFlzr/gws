@@ -31,6 +31,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
     const user = await getOrCreateUser({
       id: discordUser.id,
       username: discordUser.username,
+      globalName: discordUser.global_name ?? null,
       discriminator: discordUser.discriminator,
       avatar: discordUser.avatar,
       email: discordUser.email

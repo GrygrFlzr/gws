@@ -1,5 +1,13 @@
+import type { Database } from '../db/client';
 import * as cacheQueries from '../db/queries/cache';
-import type { Match, UserResult } from './types';
+import type {
+  FxTwitterTweetResponse,
+  FxTwitterUserResponse,
+  Match,
+  UserResult,
+  VxTwitterTweetResponse,
+  VxTwitterUserResponse
+} from './types';
 
 interface APIHealth {
   successCount: number;
@@ -23,13 +31,28 @@ class AdaptiveAPIClient {
     };
   }
 
-  async fetchUser(match: Match): Promise<UserResult> {
+  async fetchUser(db: Database, match: Match): Promise<UserResult> {
+    // Neither Fx nor Vx support querying by UID directly.
+    // Since we already have the UID, we just check our cache or return it as-is.
+    if ('userId' in match) {
+      const cached = await cacheQueries.getCachedUser(db, match);
+      if (cached) return { ...cached, source: 'cache' };
+      return {
+        userId: match.userId,
+        username: '', // Username unknown without API lookup
+        source: 'cache'
+      };
+    }
+
     const fxScore = this.calculateHealthScore(this.fxHealth);
     const vxScore = this.calculateHealthScore(this.vxHealth);
 
     console.log(`API Health - fx: ${fxScore.toFixed(2)}, vx: ${vxScore.toFixed(2)}`);
 
-    const attempts: Array<{ api: 'fx' | 'vx'; fn: (match: Match) => Promise<UserResult> }> =
+    const attempts: Array<{
+      api: 'fx' | 'vx';
+      fn: (match: Match) => Promise<Omit<UserResult, 'source'>>;
+    }> =
       fxScore >= vxScore
         ? [
             { api: 'fx', fn: this.fetchFx.bind(this) },
@@ -62,10 +85,15 @@ class AdaptiveAPIClient {
     }
 
     // Both failed - check cache
-    const cached = await cacheQueries.getCachedUser(match);
+    const cached = await cacheQueries.getCachedUser(db, match);
     if (cached) {
       console.warn('Using stale cache after API failures');
-      return { ...cached, source: 'cache' };
+      return {
+        userId: cached.userId,
+        username: cached.username,
+        source: 'cache',
+        data: cached
+      };
     }
 
     throw lastError || new Error('All APIs failed');
@@ -123,14 +151,68 @@ class AdaptiveAPIClient {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  private async fetchFx(_match: Match): Promise<UserResult> {
-    // TODO: Implement actual API calls
-    throw new Error('Not implemented');
+  private async fetchFx(match: Match): Promise<Omit<UserResult, 'source'>> {
+    let url: string;
+    if ('tweetId' in match) {
+      url = `https://api.fxtwitter.com/i/status/${match.tweetId}`;
+    } else if ('username' in match) {
+      url = `https://api.fxtwitter.com/${match.username}`;
+    } else {
+      throw new Error('Fx does not support UID lookups');
+    }
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Fx failed: ${res.status}`);
+    const data = (await res.json()) as FxTwitterUserResponse | FxTwitterTweetResponse;
+
+    if ('tweet' in data && data.tweet?.author) {
+      const tweetData = data as FxTwitterTweetResponse;
+      return {
+        userId: tweetData.tweet.author.id,
+        username: tweetData.tweet.author.screen_name,
+        data: tweetData
+      };
+    } else if ('user' in data && data.user) {
+      const userData = data as FxTwitterUserResponse;
+      return {
+        userId: userData.user.id,
+        username: userData.user.screen_name,
+        data: userData
+      };
+    }
+    throw new Error('Invalid Fx response');
   }
 
-  private async fetchVx(_match: Match): Promise<UserResult> {
-    // TODO: Implement actual API calls
-    throw new Error('Not implemented');
+  private async fetchVx(match: Match): Promise<Omit<UserResult, 'source'>> {
+    let url: string;
+    if ('tweetId' in match) {
+      url = `https://api.vxtwitter.com/i/status/${match.tweetId}`;
+    } else if ('username' in match) {
+      url = `https://api.vxtwitter.com/${match.username}`;
+    } else {
+      throw new Error('Vx does not support UID lookups');
+    }
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Vx failed: ${res.status}`);
+    const data = (await res.json()) as VxTwitterUserResponse | VxTwitterTweetResponse;
+
+    if ('user_screen_name' in data) {
+      const tweetData = data as VxTwitterTweetResponse;
+      return {
+        userId: '', // Vx doesn't return ID for tweets
+        username: tweetData.user_screen_name,
+        data: tweetData
+      };
+    } else if ('screen_name' in data && 'id' in data) {
+      const userData = data as VxTwitterUserResponse;
+      return {
+        userId: String(userData.id),
+        username: userData.screen_name,
+        data: userData
+      };
+    }
+    throw new Error('Invalid Vx response');
   }
 }
 

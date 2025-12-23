@@ -118,6 +118,7 @@ export async function invalidateSession(sessionId: string) {
 export async function getOrCreateUser(discordUser: {
   id: string;
   username: string;
+  globalName: string | null;
   discriminator: string;
   avatar: string | null;
   email?: string;
@@ -133,6 +134,7 @@ export async function getOrCreateUser(discordUser: {
       .update(users)
       .set({
         username: discordUser.username,
+        globalName: discordUser.globalName,
         discriminator: discordUser.discriminator,
         avatar: discordUser.avatar,
         email: discordUser.email,
@@ -140,7 +142,7 @@ export async function getOrCreateUser(discordUser: {
       })
       .where(eq(users.id, userId));
 
-    return existing;
+    return { ...existing, globalName: discordUser.globalName };
   }
 
   const [newUser] = await db
@@ -148,6 +150,7 @@ export async function getOrCreateUser(discordUser: {
     .values({
       id: userId,
       username: discordUser.username,
+      globalName: discordUser.globalName,
       discriminator: discordUser.discriminator,
       avatar: discordUser.avatar,
       email: discordUser.email
