@@ -2,10 +2,7 @@
   import './layout.css';
 
   const { data, children } = $props();
-  const { user } = $derived.by(() => {
-    let _ = $state(data);
-    return _;
-  });
+  const { user } = $derived(data);
 </script>
 
 <div class="min-h-screen bg-gray-50">
@@ -41,12 +38,14 @@
               </form>
             </div>
           {:else}
-            <a
-              href="/auth/login"
-              class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-            >
-              Sign in with Discord
-            </a>
+            <form method="POST" action="/auth/login">
+              <button
+                type="submit"
+                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              >
+                Sign in with Discord
+              </button>
+            </form>
           {/if}
         </div>
       </div>

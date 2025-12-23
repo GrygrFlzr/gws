@@ -4,7 +4,7 @@ import { discord } from '$lib/server/auth';
 import { generateState } from 'arctic';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ cookies }) => {
+export const POST: RequestHandler = async ({ cookies }) => {
   const state = generateState();
   const url = discord.createAuthorizationURL(state, null, ['identify', 'guilds', 'email']);
 
