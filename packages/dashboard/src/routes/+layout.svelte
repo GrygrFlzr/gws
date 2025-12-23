@@ -18,8 +18,8 @@
   ];
 </script>
 
-<div class="flex min-h-screen flex-col bg-gray-50">
-  <nav class="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
+<div class="bg-page flex min-h-screen flex-col">
+  <nav class="border-border-main bg-card sticky top-0 z-50 border-b shadow-sm">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 justify-between">
         <div class="flex">
@@ -27,14 +27,14 @@
             href="/"
             class="flex shrink-0 items-center transition-all hover:scale-105 active:scale-95"
           >
-            <h1 class="text-xl font-bold">GWS Dashboard</h1>
+            <h1 class="text-fg-primary text-xl font-bold">GWS Dashboard</h1>
           </a>
         </div>
 
         <div class="flex items-center gap-4">
           <ThemeToggle currentTheme={theme} />
           {#if user}
-            <div class="flex items-center gap-4 border-l border-gray-200 pl-4">
+            <div class="border-border-main flex items-center gap-4 border-l pl-4">
               {#if user.avatar}
                 <img
                   src="https://cdn.discordapp.com/avatars/{user.id}/{user.avatar}.png"
@@ -42,7 +42,7 @@
                   class="h-8 w-8 rounded-full shadow-sm"
                 />
               {/if}
-              <span class="hidden text-sm font-medium text-gray-700 sm:block">
+              <span class="text-fg-primary hidden text-sm font-medium sm:block">
                 {user.globalName ?? user.username}
               </span>
               <form
@@ -73,17 +73,17 @@
     {@render children()}
   </main>
 
-  <footer class="border-t border-gray-200 bg-white">
+  <footer class="border-border-main bg-card border-t">
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <p class="text-sm text-gray-500">
+        <p class="text-fg-secondary text-sm">
           Released under <a
             href="https://github.com/GrygrFlzr/gws/blob/main/LICENSE"
-            class="underline transition-colors hover:text-sky-600">BSD Zero Clause</a
+            class="hover:text-brand underline transition-colors">BSD Zero Clause</a
           >. View on
           <a
             href="https://github.com/GrygrFlzr/gws"
-            class="underline transition-colors hover:text-sky-600">GitHub</a
+            class="hover:text-brand underline transition-colors">GitHub</a
           >.
         </p>
         <nav class="flex flex-wrap justify-center gap-x-6 gap-y-2">
@@ -93,8 +93,8 @@
               class={[
                 'text-sm transition-all hover:scale-110 active:scale-90',
                 page.url.pathname === link.href
-                  ? 'font-bold text-sky-600'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'text-brand font-bold'
+                  : 'text-fg-secondary hover:text-fg-primary'
               ]}
             >
               {link.label}

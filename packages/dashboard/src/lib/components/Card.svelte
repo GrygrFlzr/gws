@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="rounded-2xl border border-gray-200 bg-white/50 p-8 shadow-sm backdrop-blur-sm {className}"
+  class="border-border-main bg-card/50 rounded-2xl border p-8 shadow-sm backdrop-blur-sm {className}"
 >
   {@render children()}
 </div>

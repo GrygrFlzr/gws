@@ -49,21 +49,21 @@
 
 <style>
   .theme-toggle {
-    background-color: light-dark(var(--color-gray-200), var(--color-gray-800));
+    background-color: var(--color-badge-neutral-bg);
   }
 
   button.inactive {
-    color: light-dark(var(--color-gray-600), var(--color-gray-400));
+    color: var(--color-fg-secondary);
   }
 
   button.inactive:hover {
-    background-color: light-dark(var(--color-gray-300), var(--color-gray-700));
-    color: light-dark(var(--color-gray-900), var(--color-gray-100));
+    background-color: var(--color-muted);
+    color: var(--color-fg-primary);
   }
 
   button.active {
-    background-color: light-dark(var(--color-white), var(--color-gray-700));
-    box-shadow: light-dark(0 1px 3px 0 rgb(0 0 0 / 0.1), 0 0 0 1px var(--color-gray-600));
-    color: light-dark(var(--color-sky-600), var(--color-sky-400));
+    background-color: var(--color-card);
+    box-shadow: light-dark(0 1px 3px 0 rgb(0 0 0 / 0.1), 0 0 0 1px var(--color-border-main));
+    color: var(--color-link);
   }
 </style>

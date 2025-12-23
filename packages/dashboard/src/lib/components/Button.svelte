@@ -75,29 +75,26 @@
   }
 
   .variant-secondary {
-    background-color: var(--color-gray-200);
-    color: var(--color-gray-700);
-    border: 1px solid var(--color-gray-300);
+    background-color: var(--color-badge-neutral-bg);
+    color: var(--color-fg-primary);
+    border: 1px solid var(--color-border-main);
   }
   .variant-secondary:hover:not(:disabled) {
-    background-color: var(--color-gray-300);
-    border-color: var(--color-gray-400);
+    background-color: var(--color-muted);
+    border-color: var(--color-fg-secondary);
   }
 
   .variant-danger {
-    background-color: light-dark(
-      var(--color-red-50),
-      color-mix(in srgb, var(--color-red-900) 20%, transparent)
-    );
-    color: light-dark(var(--color-red-800), var(--color-red-400));
-    border: 1px solid light-dark(var(--color-red-200), var(--color-red-800));
+    background-color: var(--color-error-bg);
+    color: var(--color-error-text);
+    border: 1px solid var(--color-error-border);
   }
   .variant-danger:hover:not(:disabled) {
     background-color: light-dark(
       var(--color-red-100),
-      color-mix(in srgb, var(--color-red-900) 30%, transparent)
+      color-mix(in srgb, var(--color-red-900) 40%, transparent)
     );
-    border-color: light-dark(var(--color-red-300), var(--color-red-700));
+    border-color: var(--color-error-text);
   }
 
   .spinner {
