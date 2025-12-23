@@ -7,7 +7,9 @@ import {
 } from '$lib/server/discord';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, depends }) => {
+  depends('guilds:list');
+
   if (!locals.user || !locals.session) {
     redirect(303, '/');
   }

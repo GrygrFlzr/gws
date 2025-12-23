@@ -5,5 +5,5 @@
 </script>
 
 <svg class={className} aria-hidden="true">
-  <use href={asset(`icons.svg#${name}`)}></use>
+  <use href={asset(`/icons.svg#${name}`)}></use>
 </svg>
