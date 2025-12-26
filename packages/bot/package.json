@@ -11,7 +11,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "postgres": "^3.4.7"
+    "bufferutil": "catalog:",
+    "postgres": "^3.4.7",
+    "utf-8-validate": "catalog:"
   },
   "devDependencies": {
     "@gws/core": "workspace:*",
