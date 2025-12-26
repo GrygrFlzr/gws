@@ -1,23 +1,42 @@
 import { messageQueries } from '@gws/core';
-import { findUrls } from '@gws/core/twitter';
-import type { Message } from 'discord.js';
+import type { Message, PartialMessage } from 'discord.js';
 import { db } from '../db';
+import { extractMessageData } from '../logic/messageProcessor';
 import { urlResolutionQueue } from '../queue/queues';
 
-export async function handleMessage(message: Message) {
-  if (!message.guildId) return;
+export async function handleMessage(message: Message | PartialMessage) {
+  if (message.partial) {
+    try {
+      message = await message.fetch();
+    } catch {
+      return;
+    }
+  }
 
-  const urls = findUrls(message.content);
+  // Ignore our own messages to avoid loops
+  if (message.author.id === message.client.user?.id) return;
 
-  if (urls.length === 0) return;
+  const data = extractMessageData({
+    id: message.id,
+    guildId: message.guildId,
+    channelId: message.channelId,
+    author: {
+      id: message.author.id,
+      bot: message.author.bot
+    },
+    content: message.content,
+    messageSnapshots: message.messageSnapshots?.values()
+  });
+
+  if (!data) return;
 
   const messageData = {
-    messageId: BigInt(message.id),
-    guildId: BigInt(message.guildId),
-    channelId: BigInt(message.channelId),
-    authorId: BigInt(message.author.id),
-    content: message.content,
-    urls
+    ...data,
+    messageId: BigInt(data.messageId),
+    guildId: BigInt(data.guildId),
+    channelId: BigInt(data.channelId),
+    authorId: BigInt(data.authorId),
+    urls: data.urls
   };
 
   // Dual write: Queue and database

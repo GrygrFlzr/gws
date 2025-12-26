@@ -20,6 +20,11 @@ interface APIHealth {
 class AdaptiveAPIClient {
   private fxHealth: APIHealth = this.initHealth();
   private vxHealth: APIHealth = this.initHealth();
+  private fetchFn: typeof fetch;
+
+  constructor(dependencies?: { fetch?: typeof fetch }) {
+    this.fetchFn = dependencies?.fetch || fetch.bind(globalThis);
+  }
 
   private initHealth(): APIHealth {
     return {
@@ -161,7 +166,7 @@ class AdaptiveAPIClient {
       throw new Error('Fx does not support UID lookups');
     }
 
-    const res = await fetch(url);
+    const res = await this.fetchFn(url);
     if (!res.ok) throw new Error(`Fx failed: ${res.status}`);
     const data = (await res.json()) as FxTwitterUserResponse | FxTwitterTweetResponse;
 
@@ -193,7 +198,7 @@ class AdaptiveAPIClient {
       throw new Error('Vx does not support UID lookups');
     }
 
-    const res = await fetch(url);
+    const res = await this.fetchFn(url);
     if (!res.ok) throw new Error(`Vx failed: ${res.status}`);
     const data = (await res.json()) as VxTwitterUserResponse | VxTwitterTweetResponse;
 

@@ -1,8 +1,9 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { handleMessage } from './handlers/messageHandler';
 import { createActionExecutor } from './workers/actionExecutor';
-// Import to start the worker
+// Import to start workers
 import './workers/urlResolver';
+import './workers/blocklistChecker';
 
 const client = new Client({
   intents: [

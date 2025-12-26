@@ -1,60 +1,35 @@
-import { schema } from '@gws/core/db';
-import { and, eq, isNull } from 'drizzle-orm';
+import { Worker, type Job } from 'bullmq';
 import { db } from '../db';
+import { connection } from '../queue/connection';
+import { processBlocklistJob, type BlocklistDependencies } from './blocklistChecker.logic';
 
-export async function checkAgainstBlocklists(
-  guildId: bigint,
-  channelId: string,
-  resolvedUsers: Array<{ userId: bigint; username: string }>
-) {
-  const { blocklists, guildBlocklistSubscriptions, blocklistEntries } = schema;
-
-  // Get all active blocklists for this guild (including subscribed public ones)
-  const _blocklists = await db
-    .select({
-      id: blocklists.id,
-      name: blocklists.name,
-      visibility: blocklists.visibility,
-      channelOverrides: guildBlocklistSubscriptions.channelOverrides,
-      twitterUserId: blocklistEntries.twitterUserId,
-      twitterUsername: blocklistEntries.twitterUsername,
-      publicReason: blocklistEntries.publicReason,
-      privateReason: blocklistEntries.privateReason
-    })
-    .from(blocklists)
-    .innerJoin(
-      guildBlocklistSubscriptions,
-      eq(guildBlocklistSubscriptions.blocklistId, blocklists.id)
-    )
-    .innerJoin(blocklistEntries, eq(blocklistEntries.blocklistId, blocklists.id))
-    .where(
-      and(
-        eq(guildBlocklistSubscriptions.guildId, guildId),
-        eq(guildBlocklistSubscriptions.enabled, true),
-        isNull(blocklistEntries.removedAt)
-      )
-    );
-
-  const matches = [];
-
-  for (const user of resolvedUsers) {
-    const blocked = _blocklists.filter((row) => row.twitterUserId === user.userId);
-
-    for (const block of blocked) {
-      // Check channel overrides
-      const overrides = block.channelOverrides?.[channelId];
-      if (overrides?.enabled === false) continue;
-
-      matches.push({
-        userId: user.userId,
-        username: user.username,
-        blocklistId: block.id,
-        blocklistName: block.name,
-        publicReason: block.publicReason,
-        privateReason: block.privateReason
-      });
-    }
-  }
-
-  return matches;
+interface ResolvedUser {
+  userId: string;
+  username: string;
+  source: string;
 }
+
+interface BlocklistJob {
+  messageId: string;
+  guildId: string;
+  channelId: string;
+  authorId: string;
+  isAuthorBot: boolean;
+  resolvedUsers: ResolvedUser[];
+}
+
+const deps: BlocklistDependencies = {
+  db,
+  enqueueAction: async (data) => {
+    const { executeActionQueue } = await import('../queue/queues');
+    await executeActionQueue.add('execute-action', data);
+  }
+};
+
+export const blocklistWorker = new Worker<BlocklistJob>(
+  'message-actions',
+  async (job: Job<BlocklistJob>) => {
+    return processBlocklistJob(deps, job.data);
+  },
+  { connection }
+);

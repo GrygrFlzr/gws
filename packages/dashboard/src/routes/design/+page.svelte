@@ -36,7 +36,9 @@
     defaultAction: {
       react: '🛑',
       delete: true,
-      reply: true
+      reply: true,
+      replyMessage: 'Warning!',
+      logChannel: null
     }
   };
 

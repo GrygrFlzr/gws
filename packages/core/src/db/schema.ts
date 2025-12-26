@@ -13,20 +13,13 @@ import {
   uniqueIndex,
   varchar
 } from 'drizzle-orm/pg-core';
-import type { DiscordGuildPartial } from '../discord/types';
+import type { ActionConfigOverride, DiscordGuildPartial } from '../discord/types';
 
 // Guilds
 export const guilds = pgTable('guilds', {
   guildId: bigint('guild_id', { mode: 'bigint' }).primaryKey(),
-  defaultAction: jsonb('default_action')
-    .$type<{
-      react?: string;
-      reply?: boolean;
-      replyMessage?: string;
-      delete?: boolean;
-      logChannel?: string;
-    }>()
-    .notNull(),
+  defaultAction: jsonb('default_action').$type<ActionConfigOverride>().notNull(),
+  channelOverrides: jsonb('channel_overrides').$type<Record<string, ActionConfigOverride>>(),
   createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
@@ -176,6 +169,7 @@ export const pendingMessages = pgTable(
     guildId: bigint('guild_id', { mode: 'bigint' }).notNull(),
     channelId: bigint('channel_id', { mode: 'bigint' }).notNull(),
     authorId: bigint('author_id', { mode: 'bigint' }).notNull(),
+    isAuthorBot: boolean('is_author_bot').default(false).notNull(),
     content: text('content').notNull(),
     urls: jsonb('urls').notNull(),
     state: varchar('state', { length: 20 }).notNull().default('queued'),

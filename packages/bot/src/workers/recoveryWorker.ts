@@ -25,6 +25,7 @@ export async function recoverPendingMessages() {
         guildId: msg.guildId.toString(),
         channelId: msg.channelId.toString(),
         authorId: msg.authorId.toString(),
+        isAuthorBot: msg.isAuthorBot,
         urls: msg.urls as Match[],
         recoveryAttempt: true
       },

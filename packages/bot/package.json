@@ -16,12 +16,12 @@
   "devDependencies": {
     "@gws/core": "workspace:*",
     "@types/node": "catalog:",
-    "bullmq": "^5.66.2",
+    "bullmq": "^5.66.3",
     "discord.js": "catalog:",
     "drizzle-orm": "catalog:",
     "ioredis": "^5.8.2",
     "opossum": "^9.0.0",
-    "tsdown": "^0.18.2",
+    "tsdown": "^0.18.3",
     "tsx": "^4.21.0",
     "typescript": "catalog:"
   }

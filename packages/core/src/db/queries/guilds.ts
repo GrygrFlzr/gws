@@ -1,29 +1,37 @@
 import { eq } from 'drizzle-orm';
 import type { Database } from '../client';
 import { guilds } from '../schema';
+import type { ActionConfig } from '../../discord/types';
 
-// TODO: implement channel overrides
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getActionConfig(db: Database, guildId: bigint, channelId: bigint) {
+export async function getActionConfig(
+  db: Database,
+  guildId: bigint,
+  channelId: bigint
+): Promise<{ action: ActionConfig }> {
   const guild = await db.query.guilds.findFirst({
     where: eq(guilds.guildId, guildId)
   });
 
+  const defaultAction: ActionConfig = {
+    react: '⚠️',
+    reply: true,
+    replyMessage: 'This message contains links to blocked accounts.',
+    delete: false,
+    logChannel: null,
+    ...(guild?.defaultAction || {})
+  };
+
   if (!guild) {
-    // Return default config
-    return {
-      action: {
-        react: '⚠️',
-        reply: true,
-        replyMessage: 'This message contains links to blocked accounts.',
-        delete: false,
-        logChannel: null
-      }
-    };
+    return { action: defaultAction };
   }
 
-  // TODO: Apply channel-specific overrides
+  const channelOverride = guild.channelOverrides?.[channelId.toString()];
+
   return {
-    action: guild.defaultAction
+    action: {
+      ...defaultAction,
+      ...channelOverride
+    }
   };
 }
+

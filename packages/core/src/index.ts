@@ -7,6 +7,7 @@ export * as actionQueries from './db/queries/actions';
 export * as guildQueries from './db/queries/guilds';
 export * from './db/usernameTracking';
 export * from './discord/types';
+export * from './discord/logic';
 export * from './twitter/urlParser';
 export * from './twitter/types';
 export { apiClient } from './twitter/apiClient';

@@ -21,3 +21,11 @@ export const actionQueue = new Queue('message-actions', {
     backoff: { type: 'exponential', delay: 5000 }
   }
 });
+
+export const executeActionQueue = new Queue('execute-action', {
+  connection,
+  defaultJobOptions: {
+    attempts: 5,
+    backoff: { type: 'exponential', delay: 5000 }
+  }
+});

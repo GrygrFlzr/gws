@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { ActionConfigOverride } from '@gws/core';
   import Button from '$lib/components/Button.svelte';
   import Icon from '$lib/components/Icon.svelte';
   import Section from '$lib/components/Section.svelte';
@@ -10,11 +11,7 @@
   }
 
   interface Settings {
-    defaultAction: {
-      react?: string | null;
-      delete?: boolean;
-      reply?: boolean;
-    };
+    defaultAction: ActionConfigOverride;
   }
 
   interface Subscription {

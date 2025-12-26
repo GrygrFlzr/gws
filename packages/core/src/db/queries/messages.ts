@@ -9,6 +9,7 @@ export async function storePendingMessage(
     guildId: bigint;
     channelId: bigint;
     authorId: bigint;
+    isAuthorBot: boolean;
     content: string;
     urls: unknown;
   }
