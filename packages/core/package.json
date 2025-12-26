@@ -40,7 +40,6 @@
     "@types/node": "catalog:",
     "@types/opossum": "catalog:",
     "bullmq": "catalog:",
-    "dotenv": "catalog:",
     "drizzle-kit": "catalog:",
     "drizzle-orm": "catalog:",
     "ioredis": "catalog:",

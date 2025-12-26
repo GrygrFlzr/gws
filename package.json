@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "catalog:",
-    "dotenv": "catalog:",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
     "globals": "catalog:",

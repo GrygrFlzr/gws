@@ -8,7 +8,6 @@ catalog:
   bufferutil: ^4.1.0
   bullmq: ^5.66.3
   discord.js: ^14.25.1
-  dotenv: ^17.2.3
   drizzle-kit: ^0.31.8
   drizzle-orm: ^0.45.1
   eslint: ^9.39.2

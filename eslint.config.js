@@ -12,16 +12,20 @@ export default defineConfig([
   includeIgnoreFile(gitignorePath),
   eslint.configs.recommended,
   {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.es2021
+      }
+    }
+  },
+  {
     files: ['**/*.ts'],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module'
-      },
-      globals: {
-        ...globals.node,
-        ...globals.es2021
       }
     },
     plugins: {

@@ -24,9 +24,6 @@ catalogs:
     discord.js:
       specifier: ^14.25.1
       version: 14.25.1
-    dotenv:
-      specifier: ^17.2.3
-      version: 17.2.3
     drizzle-kit:
       specifier: ^0.31.8
       version: 0.31.8
@@ -83,9 +80,6 @@ importers:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 'catalog:'
         version: 4.7.0(prettier@3.7.4)
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.3
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
@@ -166,9 +160,6 @@ importers:
       bullmq:
         specifier: 'catalog:'
         version: 5.66.3
-      dotenv:
-        specifier: 'catalog:'
-        version: 17.2.3
       drizzle-kit:
         specifier: 'catalog:'
         version: 0.31.8
@@ -1663,10 +1654,6 @@ packages:
   discord.js@14.25.1:
     resolution: {integrity: sha512-2l0gsPOLPs5t6GFZfQZKnL1OJNYFcuC/ETWsW4VtKVD/tg4ICa9x+jb9bkPffkMdRpRpuUaO/fKkHCBeiCKh8g==}
     engines: {node: '>=18'}
-
-  dotenv@17.2.3:
-    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
-    engines: {node: '>=12'}
 
   drizzle-kit@0.31.8:
     resolution: {integrity: sha512-O9EC/miwdnRDY10qRxM8P3Pg8hXe3LyU4ZipReKOgTwn4OqANmftj8XJz1UPUAS6NMHf0E2htjsbQujUTkncCg==}
@@ -3923,8 +3910,6 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-
-  dotenv@17.2.3: {}
 
   drizzle-kit@0.31.8:
     dependencies:

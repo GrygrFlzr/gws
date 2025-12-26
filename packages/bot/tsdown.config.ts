@@ -1,13 +1,11 @@
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import dotenv from 'dotenv';
+import { loadEnvFile } from 'node:process';
 import { defineConfig } from 'tsdown';
 
-dotenv.config({ path: '../../.env' });
+loadEnvFile(path.resolve(import.meta.dirname, '../../.env'));
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
 interface PackageManifest {
@@ -15,11 +13,6 @@ interface PackageManifest {
   devDependencies?: Record<string, string>;
   [key: string]: unknown;
 }
-
-const botManifest = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf-8')
-) as PackageManifest;
-const workspaceRoot = path.resolve(__dirname, '../..');
 
 /**
  * Robustly resolves a dependency version using Node's resolution metadata.
@@ -35,17 +28,14 @@ const getDependencyVersion = (name: string, manifest: PackageManifest): string =
 
   try {
     // Attempt to find the package.json by searching the module path
-    const entryPath = require.resolve(name, { paths: [__dirname, workspaceRoot] });
+    const entryPath = require.resolve(name, { paths: [import.meta.dirname, workspaceRoot] });
     let currentDir = path.dirname(entryPath);
-
+    
     // Walk up to find the nearest package.json
     while (currentDir.length > workspaceRoot.length || currentDir === workspaceRoot) {
       const pkgPath = path.join(currentDir, 'package.json');
       if (fs.existsSync(pkgPath)) {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as {
-          version: string;
-          name: string;
-        };
+        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { version: string, name: string };
         if (pkg.name === name) {
           return `^${pkg.version}`;
         }
@@ -57,9 +47,14 @@ const getDependencyVersion = (name: string, manifest: PackageManifest): string =
     return definedVersion || '*';
   } catch {
     // Fallback for optional dependencies or unresolvable paths
-    return definedVersion === 'catalog:' ? '*' : definedVersion || '*';
+    return definedVersion === 'catalog:' ? '*' : (definedVersion || '*');
   }
 };
+
+const botManifest = JSON.parse(
+  fs.readFileSync(path.resolve(import.meta.dirname, 'package.json'), 'utf-8')
+) as PackageManifest;
+const workspaceRoot = path.resolve(import.meta.dirname, '../..');
 
 export default defineConfig({
   entry: ['src/index.ts'],
