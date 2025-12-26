@@ -1,6 +1,7 @@
 import { Worker, type Job } from 'bullmq';
 import { db } from '../db';
 import { connection } from '../queue/connection';
+import { executeActionQueue } from '../queue/queues';
 import { processBlocklistJob, type BlocklistDependencies } from './blocklistChecker.logic';
 
 interface ResolvedUser {
@@ -21,7 +22,6 @@ interface BlocklistJob {
 const deps: BlocklistDependencies = {
   db,
   enqueueAction: async (data) => {
-    const { executeActionQueue } = await import('../queue/queues');
     await executeActionQueue.add('execute-action', data);
   }
 };

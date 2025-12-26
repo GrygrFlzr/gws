@@ -2,6 +2,7 @@ import type { Match } from '@gws/core/twitter';
 import { Worker, type Job } from 'bullmq';
 import { db } from '../db';
 import { connection } from '../queue/connection';
+import { actionQueue } from '../queue/queues';
 import { processUrlResolutionJob, type ResolverDependencies } from './urlResolver.logic';
 
 interface UrlResolutionJob {
@@ -17,7 +18,6 @@ interface UrlResolutionJob {
 const deps: ResolverDependencies = {
   db,
   enqueueBlacklistCheck: async (data) => {
-    const { actionQueue } = await import('../queue/queues');
     await actionQueue.add('check-blacklist', data);
   }
 };
