@@ -21,7 +21,7 @@ export async function processBlocklistJob(
     channelId: string;
     authorId: string;
     isAuthorBot: boolean;
-    resolvedUsers: Array<{ userId: string; username: string }>;
+    resolvedUsers: Array<{ userId: string; username: string; hashtags?: string[] }>;
   }
 ) {
   const { messageId, guildId, channelId, authorId, isAuthorBot, resolvedUsers } = data;
@@ -45,7 +45,8 @@ export async function processBlocklistJob(
         username: m.username,
         blocklistName: m.blocklistName,
         publicReason: m.publicReason,
-        privateReason: m.privateReason
+        privateReason: m.privateReason,
+        hashtags: m.hashtags
       }))
     });
   }
@@ -57,7 +58,7 @@ export async function checkAgainstBlocklists(
   db: Database,
   guildId: bigint,
   channelId: string,
-  resolvedUsers: Array<{ userId: bigint; username: string }>
+  resolvedUsers: Array<{ userId: bigint; username: string; hashtags?: string[] }>
 ) {
   const { blocklists, guildBlocklistSubscriptions, blocklistEntries } = schema;
 
@@ -103,7 +104,8 @@ export async function checkAgainstBlocklists(
         blocklistId: block.id,
         blocklistName: block.name,
         publicReason: block.publicReason,
-        privateReason: block.privateReason
+        privateReason: block.privateReason,
+        hashtags: user.hashtags
       });
     }
   }

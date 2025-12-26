@@ -9,7 +9,7 @@ export interface ResolverDependencies {
     channelId: string;
     authorId: string;
     isAuthorBot: boolean;
-    resolvedUsers: Array<{ userId: string; username: string; source: string }>;
+    resolvedUsers: Array<{ userId: string; username: string; source: string; hashtags?: string[] }>;
   }) => Promise<void>;
 }
 
@@ -18,6 +18,7 @@ type ResolvedUser = {
   username: string;
   source: 'fx' | 'vx' | 'cache';
   cachedAt?: number;
+  hashtags?: string[];
 };
 
 async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedUser | null> {
@@ -35,8 +36,17 @@ async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedU
     if (result.username && !result.userId) {
       const userId = await cacheQueries.getUserIdByUsername(db, result.username);
       if (userId) {
-        await cacheQueries.cacheUser(db, { userId, username: result.username });
-        return { userId, username: result.username, source: result.source };
+        await cacheQueries.cacheUser(db, {
+          userId,
+          username: result.username,
+          hashtags: result.hashtags
+        });
+        return {
+          userId,
+          username: result.username,
+          source: result.source,
+          hashtags: result.hashtags
+        };
       }
     }
 
@@ -45,7 +55,8 @@ async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedU
       return {
         userId: result.userId,
         username: result.username,
-        source: result.source
+        source: result.source,
+        hashtags: result.hashtags
       };
     }
 
@@ -53,7 +64,8 @@ async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedU
     return {
       userId: '',
       username: result.username,
-      source: result.source
+      source: result.source,
+      hashtags: result.hashtags
     };
   } catch (err) {
     console.error('API resolution failed:', err);
@@ -107,7 +119,12 @@ export async function processUrlResolutionJob(
       channelId,
       authorId,
       isAuthorBot,
-      resolvedUsers: resolved
+      resolvedUsers: resolved.map((u) => ({
+        userId: u.userId,
+        username: u.username,
+        source: u.source,
+        hashtags: u.hashtags
+      }))
     });
   }
 

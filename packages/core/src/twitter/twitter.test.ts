@@ -256,6 +256,16 @@ export const testCases: Test[] = [
     name: 'Catastrophic digit backtrack attack',
     body: `https://x.com/i/status/${'1'.repeat(3977)}`,
     expect: []
+  },
+  {
+    name: '/status/:id URL (no username)',
+    body: 'check this out https://fxtwitter.com/status/123456789',
+    expect: [{ tweetId: '123456789' }]
+  },
+  {
+    name: '/statuses/:id URL (no username)',
+    body: 'another one https://fixupx.com/statuses/987654321',
+    expect: [{ tweetId: '987654321' }]
   }
 ] as const;
 

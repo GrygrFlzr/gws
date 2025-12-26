@@ -30,12 +30,15 @@ const getDependencyVersion = (name: string, manifest: PackageManifest): string =
     // Attempt to find the package.json by searching the module path
     const entryPath = require.resolve(name, { paths: [import.meta.dirname, workspaceRoot] });
     let currentDir = path.dirname(entryPath);
-    
+
     // Walk up to find the nearest package.json
     while (currentDir.length > workspaceRoot.length || currentDir === workspaceRoot) {
       const pkgPath = path.join(currentDir, 'package.json');
       if (fs.existsSync(pkgPath)) {
-        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { version: string, name: string };
+        const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as {
+          version: string;
+          name: string;
+        };
         if (pkg.name === name) {
           return `^${pkg.version}`;
         }
@@ -47,7 +50,7 @@ const getDependencyVersion = (name: string, manifest: PackageManifest): string =
     return definedVersion || '*';
   } catch {
     // Fallback for optional dependencies or unresolvable paths
-    return definedVersion === 'catalog:' ? '*' : (definedVersion || '*');
+    return definedVersion === 'catalog:' ? '*' : definedVersion || '*';
   }
 };
 

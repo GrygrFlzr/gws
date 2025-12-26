@@ -1,13 +1,42 @@
 import type { Database } from '../db/client';
 import * as cacheQueries from '../db/queries/cache';
+import { extractHashtags } from './hashtagParser';
 import type {
-  FxTwitterTweetResponse,
-  FxTwitterUserResponse,
+  APITwitterStatus,
+  FxTwitterAPIV1Response,
+  FxTwitterAPIV2Response,
+  FxTwitterUserAPIV1Response,
   Match,
   UserResult,
   VxTwitterTweetResponse,
   VxTwitterUserResponse
 } from './types';
+
+function getHashtagsFromStatus(status: APITwitterStatus): string[] {
+  let hashtags: string[] = [];
+
+  // 1. Facets (Most robust)
+  if (status.raw_text?.facets) {
+    hashtags = status.raw_text.facets
+      .filter((f) => f.type === 'hashtag' && f.original)
+      .map((f) => f.original!.toLowerCase());
+  }
+
+  // 2. Explicit array (Legacy/Optional)
+  if (hashtags.length === 0 && status.hashtags) {
+    hashtags = status.hashtags.map((h) => h.toLowerCase());
+  }
+
+  // 3. Regex extraction from text (Fallback)
+  if (hashtags.length === 0) {
+    const text = status.full_text || status.text;
+    if (text) {
+      hashtags = extractHashtags(text);
+    }
+  }
+
+  return hashtags;
+}
 
 interface APIHealth {
   successCount: number;
@@ -157,6 +186,45 @@ class AdaptiveAPIClient {
   }
 
   private async fetchFx(match: Match): Promise<Omit<UserResult, 'source'>> {
+    // Try v2 API first for better data quality (facets, full text, etc.)
+    try {
+      if ('tweetId' in match) {
+        const v2Url = `https://api.fxtwitter.com/2/status/${match.tweetId}`;
+        const res = await this.fetchFn(v2Url);
+        if (res.ok) {
+          const data = (await res.json()) as FxTwitterAPIV2Response;
+          if (data.code === 200 && data.status) {
+            const status = data.status;
+            const hashtags = getHashtagsFromStatus(status);
+
+            return {
+              userId: status.author.id,
+              username: status.author.screen_name,
+              data: data,
+              hashtags: hashtags.length > 0 ? hashtags : undefined
+            };
+          }
+        }
+      } else if ('username' in match) {
+        const v2Url = `https://api.fxtwitter.com/2/profile/${match.username}`;
+        const res = await this.fetchFn(v2Url);
+        if (res.ok) {
+          const data = (await res.json()) as FxTwitterUserAPIV1Response;
+          if (data.code === 200 && data.user) {
+            return {
+              userId: data.user.id,
+              username: data.user.screen_name,
+              data: data,
+              hashtags: extractHashtags(data.user.description)
+            };
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('FxTwitter v2 API failed, falling back to v1', e);
+    }
+
+    // Fallback to v1 API
     let url: string;
     if ('tweetId' in match) {
       url = `https://api.fxtwitter.com/i/status/${match.tweetId}`;
@@ -168,21 +236,29 @@ class AdaptiveAPIClient {
 
     const res = await this.fetchFn(url);
     if (!res.ok) throw new Error(`Fx failed: ${res.status}`);
-    const data = (await res.json()) as FxTwitterUserResponse | FxTwitterTweetResponse;
+    const data = (await res.json()) as FxTwitterUserAPIV1Response | FxTwitterAPIV1Response;
 
     if ('tweet' in data && data.tweet?.author) {
-      const tweetData = data as FxTwitterTweetResponse;
+      const tweetData = data as FxTwitterAPIV1Response;
+      if (!tweetData.tweet) throw new Error('Tweet data missing');
+
+      const tweet = tweetData.tweet;
+      const hashtags = getHashtagsFromStatus(tweet);
+
       return {
-        userId: tweetData.tweet.author.id,
-        username: tweetData.tweet.author.screen_name,
-        data: tweetData
+        userId: tweet.author.id,
+        username: tweet.author.screen_name,
+        data: tweetData,
+        hashtags: hashtags.length > 0 ? hashtags : undefined
       };
     } else if ('user' in data && data.user) {
-      const userData = data as FxTwitterUserResponse;
+      const userData = data as FxTwitterUserAPIV1Response;
+      if (!userData.user) throw new Error('User data missing');
       return {
         userId: userData.user.id,
         username: userData.user.screen_name,
-        data: userData
+        data: userData,
+        hashtags: extractHashtags(userData.user.description)
       };
     }
     throw new Error('Invalid Fx response');
@@ -207,14 +283,19 @@ class AdaptiveAPIClient {
       return {
         userId: '', // Vx doesn't return ID for tweets
         username: tweetData.user_screen_name,
-        data: tweetData
+        data: tweetData,
+        hashtags:
+          tweetData.hashtags && tweetData.hashtags.length > 0
+            ? tweetData.hashtags.map((h) => h.toLowerCase())
+            : extractHashtags(tweetData.text)
       };
     } else if ('screen_name' in data && 'id' in data) {
       const userData = data as VxTwitterUserResponse;
       return {
         userId: String(userData.id),
         username: userData.screen_name,
-        data: userData
+        data: userData,
+        hashtags: extractHashtags(userData.description)
       };
     }
     throw new Error('Invalid Vx response');

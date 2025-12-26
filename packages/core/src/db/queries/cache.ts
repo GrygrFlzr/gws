@@ -19,7 +19,8 @@ export async function getCachedUser(db: Database, match: Match) {
       ? {
           userId: result.userId.toString(),
           username: result.username,
-          cachedAt: result.cachedAt.getTime()
+          cachedAt: result.cachedAt.getTime(),
+          hashtags: (result.data as { hashtags?: string[] })?.hashtags
         }
       : null;
   }
@@ -34,28 +35,34 @@ export async function getCachedUser(db: Database, match: Match) {
     ? {
         userId: result.userId.toString(),
         username: result.username,
-        cachedAt: result.cachedAt.getTime()
+        cachedAt: result.cachedAt.getTime(),
+        hashtags: (result.data as { hashtags?: string[] })?.hashtags
       }
     : null;
 }
 
 export async function cacheUser(
   db: Database,
-  data: { userId: string; username: string; data?: unknown }
+  data: { userId: string; username: string; data?: unknown; hashtags?: string[] }
 ) {
+  const dataToStore =
+    data.data && typeof data.data === 'object'
+      ? { ...data.data, hashtags: data.hashtags }
+      : { hashtags: data.hashtags, data: data.data };
+
   return db
     .insert(twitterUserCache)
     .values({
       userId: BigInt(data.userId),
       username: data.username,
-      data: data.data
+      data: dataToStore
     })
     .onConflictDoUpdate({
       target: twitterUserCache.userId,
       set: {
         username: data.username,
         lastChecked: new Date(),
-        data: data.data
+        data: dataToStore
       }
     });
 }

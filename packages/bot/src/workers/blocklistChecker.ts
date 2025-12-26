@@ -8,6 +8,7 @@ interface ResolvedUser {
   userId: string;
   username: string;
   source: string;
+  hashtags?: string[];
 }
 
 interface BlocklistJob {

@@ -76,7 +76,7 @@ const separator = /\//;
  * Performance: O(180) lookahead + O(200) bounded search = O(1) per attempt
  */
 const item =
-  /[^\\\s\r\n?#]+\/(?<type>status(?:es)?|user)\/(?!.{0,180}\d{21})[^\\\s\r\n?#]{0,200}?(?<id>(?<!\d)\d{2,20})(?!\d)/;
+  /(?:[^\\\s\r\n?#]+\/)?(?<type>status(?:es)?|user)\/(?!.{0,180}\d{21})[^\\\s\r\n?#]{0,200}?(?<id>(?<!\d)\d{2,20})(?!\d)/;
 
 /**
  * - https://x.com/jack/with_replies

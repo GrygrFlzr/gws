@@ -35,6 +35,7 @@ export interface BlacklistedUser {
   blocklistName: string;
   publicReason: string | null;
   privateReason: string | null;
+  hashtags?: string[];
 }
 
 export interface ModerationAction {
