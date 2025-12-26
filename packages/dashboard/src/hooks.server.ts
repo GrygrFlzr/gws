@@ -1,3 +1,4 @@
+import '$lib/server/env';
 import type { Handle } from '@sveltejs/kit';
 import { validateSession } from '$lib/server/auth';
 
