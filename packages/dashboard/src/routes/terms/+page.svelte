@@ -3,6 +3,12 @@
 </script>
 
 <LegalLayout title="Terms of Service">
+  <div class="mb-8 border-l-4 border-sky-500 bg-sky-50/50 p-4 text-sm text-sky-900">
+    <strong>Self-Hosting Note:</strong> This document outlines the terms for the official GWS service.
+    If you are running a self-hosted instance of the GWS open-source project, these terms do not apply
+    to your instance, and you should provide your own terms for your users.
+  </div>
+
   <p>
     By adding GWS to your Discord server or using its features, you agree to the following terms.
   </p>

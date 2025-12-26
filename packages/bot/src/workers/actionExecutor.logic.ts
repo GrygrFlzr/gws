@@ -85,6 +85,8 @@ export async function processActionJob(
     await actionQueries.recordOffender(deps.db, {
       guildId: BigInt(guildId),
       authorId: BigInt(authorId),
+      channelId: BigInt(channelId),
+      messageId: BigInt(messageId),
       blacklistedUserIds: blacklistedUsers.map((u) => BigInt(u.userId)),
       timestamp: new Date()
     });

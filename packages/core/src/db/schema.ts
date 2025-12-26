@@ -200,6 +200,7 @@ export const offenderAnalytics = pgTable(
       .$type<Record<string, number>>()
       .default({})
       .notNull(),
+    detailsPurgedAt: timestamp('details_purged_at'),
     updatedAt: timestamp('updated_at').defaultNow().notNull()
   },
   (table) => [

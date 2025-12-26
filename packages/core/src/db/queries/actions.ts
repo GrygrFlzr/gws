@@ -24,6 +24,8 @@ export async function recordOffender(
   data: {
     guildId: bigint;
     authorId: bigint;
+    channelId: bigint;
+    messageId: bigint;
     blacklistedUserIds: bigint[];
     timestamp: Date;
   }
@@ -32,8 +34,8 @@ export async function recordOffender(
   await db.insert(violationLog).values({
     guildId: data.guildId,
     discordUserId: data.authorId,
-    channelId: 0n, // Will be set by caller
-    messageId: 0n, // Will be set by caller
+    channelId: data.channelId,
+    messageId: data.messageId,
     blockedTwitterUserIds: data.blacklistedUserIds,
     blocklistNames: [], // Will be set by caller
     timestamp: data.timestamp

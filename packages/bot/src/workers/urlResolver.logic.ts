@@ -36,7 +36,7 @@ async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedU
       const userId = await cacheQueries.getUserIdByUsername(db, result.username);
       if (userId) {
         await cacheQueries.cacheUser(db, { userId, username: result.username });
-        return { userId, username: result.username, source: result.source as any };
+        return { userId, username: result.username, source: result.source };
       }
     }
 
@@ -45,7 +45,7 @@ async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedU
       return {
         userId: result.userId,
         username: result.username,
-        source: result.source as any
+        source: result.source
       };
     }
 
@@ -53,7 +53,7 @@ async function resolveTwitterUser(db: Database, match: Match): Promise<ResolvedU
     return {
       userId: '',
       username: result.username,
-      source: result.source as any
+      source: result.source
     };
   } catch (err) {
     console.error('API resolution failed:', err);
