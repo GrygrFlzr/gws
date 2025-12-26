@@ -8,7 +8,7 @@
     "start": "node --env-file=../../.env dist/index.js",
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "bufferutil": "catalog:",
@@ -25,6 +25,7 @@
     "opossum": "catalog:",
     "tsdown": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@vitest/coverage-v8": "catalog:"
   }
 }

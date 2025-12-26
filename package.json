@@ -28,7 +28,7 @@
     "db:studio": "pnpm --filter @gws/core db:studio",
     "bot": "pnpm --filter @gws/bot dev",
     "dashboard": "pnpm --filter @gws/dashboard dev",
-    "check": "turbo run check type-check",
+    "check": "turbo run check",
     "lint": "turbo run lint",
     "lint:root": "eslint .",
     "format": "prettier --write .",

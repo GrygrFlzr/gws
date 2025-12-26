@@ -15,11 +15,15 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".svelte-kit/**"]
+      "outputs": ["dist/**", "build/**", ".svelte-kit/**"]
+    },
+    "prepare": {
+      "outputs": [".svelte-kit/**"]
     },
     "dev": {
       "cache": false,
       "persistent": true,
+      "dependsOn": ["prepare"],
       "env": [
         "DATABASE_URL",
         "REDIS_URL",
@@ -30,13 +34,11 @@
       ]
     },
     "test": {
-      "dependsOn": ["^build"]
+      "outputs": ["coverage/**"]
     },
-    "lint": {
-      "dependsOn": ["^build"]
-    },
+    "lint": {},
     "type-check": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["prepare"]
     },
     "db:generate": {
       "cache": false,
@@ -47,7 +49,7 @@
       "env": ["DATABASE_URL"]
     },
     "check": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["type-check", "lint", "test"]
     }
   }
 }
