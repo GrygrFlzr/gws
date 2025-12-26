@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
+import type { ActionConfig } from '../../discord/types';
 import type { Database } from '../client';
 import { guilds } from '../schema';
-import type { ActionConfig } from '../../discord/types';
 
 export async function getActionConfig(
   db: Database,
@@ -34,4 +34,3 @@ export async function getActionConfig(
     }
   };
 }
-

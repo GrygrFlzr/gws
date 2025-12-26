@@ -1,8 +1,8 @@
+import type { Match } from '@gws/core/twitter';
 import { Worker, type Job } from 'bullmq';
 import { db } from '../db';
 import { connection } from '../queue/connection';
 import { processUrlResolutionJob, type ResolverDependencies } from './urlResolver.logic';
-import type { Match } from '@gws/core/twitter';
 
 interface UrlResolutionJob {
   messageId: string;

@@ -36,9 +36,7 @@ describe('Message Processor Logic', () => {
       channelId: '200',
       author: { id: '300', bot: false },
       content: 'I forwarded this',
-      messageSnapshots: [
-        { content: 'Original message with https://x.com/jack/status/20' }
-      ]
+      messageSnapshots: [{ content: 'Original message with https://x.com/jack/status/20' }]
     });
 
     expect(data).not.toBeNull();
@@ -53,9 +51,7 @@ describe('Message Processor Logic', () => {
       channelId: '200',
       author: { id: '300', bot: false },
       content: 'Same link https://x.com/jack/status/20',
-      messageSnapshots: [
-        { content: 'Again https://x.com/jack/status/20' }
-      ]
+      messageSnapshots: [{ content: 'Again https://x.com/jack/status/20' }]
     });
 
     expect(data?.urls).toHaveLength(1);

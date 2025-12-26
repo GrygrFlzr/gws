@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { determineActions, groupUsersByBlocklist, renderReply, type BlacklistedUser, type ActionConfig } from './logic';
+import {
+  determineActions,
+  groupUsersByBlocklist,
+  renderReply,
+  type ActionConfig,
+  type BlacklistedUser
+} from './logic';
 
 describe('Discord Moderation Logic', () => {
   const mockUsers: BlacklistedUser[] = [
@@ -51,9 +57,27 @@ describe('Discord Moderation Logic', () => {
   describe('groupUsersByBlocklist', () => {
     it('should correctly group multiple users by their blocklist name', () => {
       const manyUsers: BlacklistedUser[] = [
-        { userId: '1', username: 'u1', blocklistName: 'List A', publicReason: null, privateReason: null },
-        { userId: '2', username: 'u2', blocklistName: 'List A', publicReason: null, privateReason: null },
-        { userId: '3', username: 'u3', blocklistName: 'List B', publicReason: null, privateReason: null }
+        {
+          userId: '1',
+          username: 'u1',
+          blocklistName: 'List A',
+          publicReason: null,
+          privateReason: null
+        },
+        {
+          userId: '2',
+          username: 'u2',
+          blocklistName: 'List A',
+          publicReason: null,
+          privateReason: null
+        },
+        {
+          userId: '3',
+          username: 'u3',
+          blocklistName: 'List B',
+          publicReason: null,
+          privateReason: null
+        }
       ];
 
       const groups = groupUsersByBlocklist(manyUsers);

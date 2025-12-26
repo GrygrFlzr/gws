@@ -1,4 +1,5 @@
 import type { ActionConfig, BlacklistedUser, ModerationAction } from './types';
+
 export type { ActionConfig, BlacklistedUser, ModerationAction };
 
 export type BlocklistGroups = Record<string, BlacklistedUser[]>;

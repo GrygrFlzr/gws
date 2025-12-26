@@ -1,4 +1,4 @@
-import { schema, type Database, type BlacklistedUser } from '@gws/core';
+import { schema, type BlacklistedUser, type Database } from '@gws/core';
 import { and, eq, isNull } from 'drizzle-orm';
 
 export interface BlocklistDependencies {
