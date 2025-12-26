@@ -12,19 +12,19 @@
   },
   "dependencies": {
     "bufferutil": "catalog:",
-    "postgres": "^3.4.7",
+    "postgres": "catalog:",
     "utf-8-validate": "catalog:"
   },
   "devDependencies": {
     "@gws/core": "workspace:*",
     "@types/node": "catalog:",
-    "bullmq": "^5.66.3",
+    "bullmq": "catalog:",
     "discord.js": "catalog:",
     "drizzle-orm": "catalog:",
-    "ioredis": "^5.8.2",
-    "opossum": "^9.0.0",
-    "tsdown": "^0.18.3",
-    "tsx": "^4.21.0",
+    "ioredis": "catalog:",
+    "opossum": "catalog:",
+    "tsdown": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }

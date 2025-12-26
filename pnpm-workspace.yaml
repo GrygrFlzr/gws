@@ -4,15 +4,22 @@ packages:
 catalog:
   '@ianvs/prettier-plugin-sort-imports': ^4.7.0
   '@types/node': ^24.10.4
+  '@types/opossum': ^8.1.9
   bufferutil: ^4.1.0
+  bullmq: ^5.66.3
   discord.js: ^14.25.1
   dotenv: ^17.2.3
+  drizzle-kit: ^0.31.8
   drizzle-orm: ^0.45.1
   eslint: ^9.39.2
   eslint-config-prettier: ^10.1.8
   globals: ^16.5.0
+  ioredis: ^5.8.2
+  opossum: ^9.0.0
   postgres: ^3.4.7
   prettier: ^3.7.4
+  tsdown: ^0.18.3
+  tsx: ^4.21.0
   turbo: ^2.7.2
   typescript: ^5.9.3
   typescript-eslint: ^8.50.1

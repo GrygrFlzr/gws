@@ -26,34 +26,54 @@ services:
       timeout: 3s
       retries: 5
 
+  migration:
+    build:
+      context: ..
+      dockerfile: packages/core/Dockerfile.migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gws}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-gws}
+
   bot:
     build:
-      context: ../packages/bot
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: packages/bot/Dockerfile
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migration:
+        condition: service_completed_successfully
     env_file:
       - ../.env
     environment:
       NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gws}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-gws}
+      REDIS_URL: redis://redis:6379
 
   dashboard:
     build:
-      context: ../packages/dashboard
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: packages/dashboard/Dockerfile
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+      migration:
+        condition: service_completed_successfully
     env_file:
       - ../.env
     environment:
       NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gws}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-gws}
       PORT: 3000
+      ORIGIN: ${ORIGIN:-http://localhost:3000}
     ports:
       - '3000:3000'
 

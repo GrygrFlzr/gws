@@ -4,12 +4,24 @@
   "type": "module",
   "description": "Shared core functionality for GWS",
   "exports": {
-    ".": "./src/index.ts",
-    "./db": "./src/db/index.ts",
-    "./db/schema": "./src/db/schema.ts",
-    "./db/client": "./src/db/client.ts",
-    "./twitter": "./src/twitter/index.ts",
-    "./queue": "./src/queue/index.ts"
+    ".": {
+      "import": "./src/index.ts"
+    },
+    "./db": {
+      "import": "./src/db/index.ts"
+    },
+    "./db/schema": {
+      "import": "./src/db/schema.ts"
+    },
+    "./db/client": {
+      "import": "./src/db/client.ts"
+    },
+    "./twitter": {
+      "import": "./src/twitter/index.ts"
+    },
+    "./queue": {
+      "import": "./src/queue/index.ts"
+    }
   },
   "scripts": {
     "db:generate": "drizzle-kit generate",
@@ -22,17 +34,17 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "postgres": "^3.4.7"
+    "postgres": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "@types/opossum": "^8.1.9",
-    "bullmq": "^5.66.3",
+    "@types/opossum": "catalog:",
+    "bullmq": "catalog:",
     "dotenv": "catalog:",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "catalog:",
     "drizzle-orm": "catalog:",
-    "ioredis": "^5.8.2",
-    "opossum": "^9.0.0",
+    "ioredis": "catalog:",
+    "opossum": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
