@@ -30,15 +30,17 @@
   ];
 </script>
 
-<div class="theme-toggle flex items-center gap-1 rounded-lg p-1">
+<div class="bg-badge-neutral-bg flex items-center gap-1 rounded-lg p-1">
   {#each themes as t}
     <button
       type="button"
       onclick={() => setTheme(t.value)}
-      class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-all {theme ===
-      t.value
-        ? 'active'
-        : 'inactive'}"
+      class={[
+        'flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-all',
+        theme === t.value
+          ? 'bg-card text-link light-dark:shadow-[0_1px_3px_0_rgb(0_0_0_/_0.1)] dark:ring-border-main shadow-sm dark:ring-1'
+          : 'text-fg-secondary hover:bg-muted hover:text-fg-primary'
+      ]}
       title={t.label}
       aria-label="Set theme to {t.label}"
     >
@@ -46,24 +48,3 @@
     </button>
   {/each}
 </div>
-
-<style>
-  .theme-toggle {
-    background-color: var(--color-badge-neutral-bg);
-  }
-
-  button.inactive {
-    color: var(--color-fg-secondary);
-  }
-
-  button.inactive:hover {
-    background-color: var(--color-muted);
-    color: var(--color-fg-primary);
-  }
-
-  button.active {
-    background-color: var(--color-card);
-    box-shadow: light-dark(0 1px 3px 0 rgb(0 0 0 / 0.1), 0 0 0 1px var(--color-border-main));
-    color: var(--color-link);
-  }
-</style>

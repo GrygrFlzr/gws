@@ -14,30 +14,35 @@
   --color-border-main: light-dark(#e5e7eb, #374151);
 
   /* Tactical Glows */
-  --color-glow-primary: light-dark(var(--color-sky-400), var(--color-sky-600));
-  --color-glow-secondary: light-dark(var(--color-indigo-500), var(--color-indigo-700));
-  --color-glow-accent: light-dark(var(--color-pink-400), var(--color-pink-600));
+  --color-glow-primary: light-dark(var(--color-sky-400), var(--color-sky-500));
+  --color-glow-secondary: light-dark(var(--color-indigo-500), var(--color-indigo-600));
+  --color-glow-accent: light-dark(var(--color-fuchsia-500), var(--color-fuchsia-600));
 
   --color-link: light-dark(var(--color-sky-600), var(--color-sky-400));
   --color-brand: light-dark(var(--color-sky-600), var(--color-sky-400));
 
   /* Tactical Theme Variables */
-  --color-tactical-bg: light-dark(var(--color-white), var(--color-gray-900));
+  --color-tactical-bg: light-dark(var(--color-white), #0a0f1d);
   --color-tactical-text: light-dark(var(--color-gray-900), var(--color-gray-100));
-  --color-tactical-border: light-dark(var(--color-gray-200), var(--color-gray-700));
+  --color-tactical-border: light-dark(var(--color-gray-200), #1e293b);
+
+  /* Fun Accents */
+  --color-fun-pink: #ff00ff;
+  --color-fun-cyan: #00ffff;
+  --color-fun-amber: #ffbf00;
 
   /* Semantic Badge Colors */
   --color-badge-primary-bg: light-dark(
     var(--color-sky-50),
-    color-mix(in srgb, var(--color-sky-900) 30%, transparent)
+    color-mix(in srgb, var(--color-sky-500) 20%, transparent)
   );
-  --color-badge-primary-text: light-dark(var(--color-sky-700), var(--color-sky-200));
+  --color-badge-primary-text: light-dark(var(--color-sky-700), var(--color-sky-300));
 
   --color-badge-success-bg: light-dark(
     var(--color-green-50),
-    color-mix(in srgb, var(--color-green-900) 30%, transparent)
+    color-mix(in srgb, var(--color-green-500) 20%, transparent)
   );
-  --color-badge-success-text: light-dark(var(--color-green-700), var(--color-green-200));
+  --color-badge-success-text: light-dark(var(--color-green-700), var(--color-green-300));
 
   --color-badge-neutral-bg: light-dark(var(--color-gray-100), var(--color-gray-800));
   --color-badge-neutral-text: light-dark(var(--color-gray-600), var(--color-gray-400));
@@ -45,22 +50,81 @@
   /* Semantic State Colors */
   --color-error-bg: light-dark(
     var(--color-red-50),
-    color-mix(in srgb, var(--color-red-900) 30%, transparent)
+    color-mix(in srgb, var(--color-red-500) 20%, transparent)
   );
-  --color-error-text: light-dark(var(--color-red-700), var(--color-red-200));
-  --color-error-border: light-dark(var(--color-red-200), var(--color-red-900));
+  --color-error-text: light-dark(var(--color-red-700), var(--color-red-300));
+  --color-error-border: light-dark(var(--color-red-200), var(--color-red-800));
 
   /* Interactive Elements */
   --color-card-hover: light-dark(
     var(--color-gray-50),
-    color-mix(in srgb, var(--color-gray-800) 50%, transparent)
+    color-mix(in srgb, var(--color-gray-800) 60%, transparent)
   );
+
+  /* Custom Animations */
+  @keyframes scanline {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
 }
 
 :root {
   background-color: var(--color-page);
   color: var(--color-fg-primary);
   color-scheme: light dark;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* Fun utility classes */
+.tactical-glow {
+  box-shadow: 0 0 15px -3px var(--color-glow-primary);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    to right,
+    var(--color-glow-primary),
+    var(--color-glow-secondary)
+  );
+}
+
+.scanline-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--color-glow-primary) 10%, transparent) 50%,
+    transparent 100%
+  );
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
 }
 
 /* Ensure all headings respect the theme color */

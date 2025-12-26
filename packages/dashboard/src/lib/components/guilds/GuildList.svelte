@@ -44,7 +44,7 @@
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
-    <h1 class="text-fg-primary text-2xl font-bold">Manageable Servers</h1>
+    <h1 class="text-gradient text-3xl font-black tracking-tight">Manageable Servers</h1>
 
     {#if onRefresh}
       <Button variant="primary" loading={isRefreshing} onclick={onRefresh}>
@@ -99,7 +99,7 @@
       </div>
     </div>
   {:else}
-    <div class="bg-card ring-border-main overflow-hidden rounded-md shadow ring-1">
+    <div class="bg-card ring-border-main overflow-hidden rounded-xl shadow-lg ring-1">
       <ul class="divide-border-main divide-y">
         {#each guilds as guild (guild.id)}
           <li>
@@ -107,53 +107,54 @@
               <button
                 type="button"
                 onclick={() => onSelect(guild.id)}
-                class="hover:bg-card-hover block w-full cursor-pointer text-left transition-colors"
+                class="hover:bg-card-hover group block w-full cursor-pointer text-left transition-all"
               >
-                <div class="px-4 py-4 sm:px-6">
+                <div class="px-4 py-5 sm:px-6">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                      {#if guild.icon}
-                        <img
-                          src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.png?size=64"
-                          alt={guild.name}
-                          class="h-10 w-10 rounded-full"
-                        />
-                      {:else}
-                        <div
-                          class="bg-badge-primary-bg ring-badge-primary-text/30 flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-inset"
-                        >
-                          <span class="text-badge-primary-text font-medium">
-                            {guild.name.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                      {/if}
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        {#if guild.icon}
+                          <img
+                            src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.png?size=64"
+                            alt={guild.name}
+                            class="h-12 w-12 rounded-xl transition-transform group-hover:scale-110"
+                          />
+                        {:else}
+                          <div
+                            class="bg-badge-primary-bg ring-badge-primary-text/30 flex h-12 w-12 items-center justify-center rounded-xl ring-1 transition-transform ring-inset group-hover:scale-110"
+                          >
+                            <span class="text-badge-primary-text text-lg font-bold">
+                              {guild.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        {/if}
+                        {#if guild.isConfigured}
+                          <div
+                            class="absolute -top-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500 dark:border-gray-900"
+                          ></div>
+                        {/if}
+                      </div>
                       <div>
                         <div class="flex items-center gap-2">
-                          <p class="text-link truncate text-sm font-medium">
+                          <p class="text-fg-primary group-hover:text-glow-primary font-bold">
                             {guild.name}
                           </p>
-                          {#if guild.isConfigured}
+                          {#if !guild.isConfigured}
                             <span
-                              class="bg-badge-success-bg text-badge-success-text ring-badge-success-text/30 inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset"
+                              class="bg-badge-primary-bg text-badge-primary-text ring-badge-primary-text/30 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ring-1 ring-inset"
                             >
-                              Active
-                            </span>
-                          {:else}
-                            <span
-                              class="bg-badge-primary-bg text-badge-primary-text ring-badge-primary-text/30 inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset"
-                            >
-                              Add to Server
+                              Setup
                             </span>
                           {/if}
                         </div>
                         {#if guild.owner}
-                          <p class="text-fg-secondary text-xs">Owner</p>
+                          <p class="text-fg-secondary text-xs font-medium italic">Owner</p>
                         {/if}
                       </div>
                     </div>
                     <Icon
                       name="icon-chevron-right"
-                      class="text-fg-secondary h-5 w-5 fill-current"
+                      class="text-fg-secondary group-hover:text-glow-primary h-5 w-5 fill-current transition-all group-hover:translate-x-1"
                     />
                   </div>
                 </div>
@@ -161,53 +162,54 @@
             {:else}
               <a
                 href={resolve(`/guilds/${guild.id}`)}
-                class="hover:bg-card-hover block cursor-pointer transition-colors"
+                class="hover:bg-card-hover group block cursor-pointer transition-all"
               >
-                <div class="px-4 py-4 sm:px-6">
+                <div class="px-4 py-5 sm:px-6">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                      {#if guild.icon}
-                        <img
-                          src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.png?size=64"
-                          alt={guild.name}
-                          class="h-10 w-10 rounded-full"
-                        />
-                      {:else}
-                        <div
-                          class="bg-badge-primary-bg ring-badge-primary-text/30 flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-inset"
-                        >
-                          <span class="text-badge-primary-text font-medium">
-                            {guild.name.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
-                      {/if}
+                    <div class="flex items-center gap-4">
+                      <div class="relative">
+                        {#if guild.icon}
+                          <img
+                            src="https://cdn.discordapp.com/icons/{guild.id}/{guild.icon}.png?size=64"
+                            alt={guild.name}
+                            class="h-12 w-12 rounded-xl transition-transform group-hover:scale-110"
+                          />
+                        {:else}
+                          <div
+                            class="bg-badge-primary-bg ring-badge-primary-text/30 flex h-12 w-12 items-center justify-center rounded-xl ring-1 transition-transform ring-inset group-hover:scale-110"
+                          >
+                            <span class="text-badge-primary-text text-lg font-bold">
+                              {guild.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        {/if}
+                        {#if guild.isConfigured}
+                          <div
+                            class="absolute -top-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500 dark:border-gray-900"
+                          ></div>
+                        {/if}
+                      </div>
                       <div>
                         <div class="flex items-center gap-2">
-                          <p class="text-link truncate text-sm font-medium">
+                          <p class="text-fg-primary group-hover:text-glow-primary font-bold">
                             {guild.name}
                           </p>
-                          {#if guild.isConfigured}
+                          {#if !guild.isConfigured}
                             <span
-                              class="bg-badge-success-bg text-badge-success-text ring-badge-success-text/30 inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset"
+                              class="bg-badge-primary-bg text-badge-primary-text ring-badge-primary-text/30 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black tracking-wider uppercase ring-1 ring-inset"
                             >
-                              Active
-                            </span>
-                          {:else}
-                            <span
-                              class="bg-badge-primary-bg text-badge-primary-text ring-badge-primary-text/30 inline-flex items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset"
-                            >
-                              Add to Server
+                              Setup
                             </span>
                           {/if}
                         </div>
                         {#if guild.owner}
-                          <p class="text-fg-secondary text-xs">Owner</p>
+                          <p class="text-fg-secondary text-xs font-medium italic">Owner</p>
                         {/if}
                       </div>
                     </div>
                     <Icon
                       name="icon-chevron-right"
-                      class="text-fg-secondary h-5 w-5 fill-current"
+                      class="text-fg-secondary group-hover:text-glow-primary h-5 w-5 fill-current transition-all group-hover:translate-x-1"
                     />
                   </div>
                 </div>

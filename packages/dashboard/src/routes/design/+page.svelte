@@ -81,25 +81,34 @@
     </p>
     <div class="border-border-main flex gap-4 border-b">
       <button
-        class="border-b-2 px-4 py-2 font-medium transition-colors {activeTab === 'list'
-          ? 'border-sky-500 text-sky-600'
-          : 'text-fg-secondary hover:text-fg-primary border-transparent'}"
+        class={[
+          'cursor-pointer border-b-2 px-4 py-2 font-medium transition-colors',
+          activeTab === 'list'
+            ? 'border-sky-500 text-sky-600'
+            : 'text-fg-secondary hover:text-fg-primary border-transparent'
+        ]}
         onclick={() => (activeTab = 'list')}
       >
         Server List
       </button>
       <button
-        class="border-b-2 px-4 py-2 font-medium transition-colors {activeTab === 'dashboard'
-          ? 'border-sky-500 text-sky-600'
-          : 'text-fg-secondary hover:text-fg-primary border-transparent'}"
+        class={[
+          'cursor-pointer border-b-2 px-4 py-2 font-medium transition-colors',
+          activeTab === 'dashboard'
+            ? 'border-sky-500 text-sky-600'
+            : 'text-fg-secondary hover:text-fg-primary border-transparent'
+        ]}
         onclick={() => (activeTab = 'dashboard')}
       >
         Dashboard View
       </button>
       <button
-        class="border-b-2 px-4 py-2 font-medium transition-colors {activeTab === 'error'
-          ? 'border-sky-500 text-sky-600'
-          : 'text-fg-secondary hover:text-fg-primary border-transparent'}"
+        class={[
+          'cursor-pointer border-b-2 px-4 py-2 font-medium transition-colors',
+          activeTab === 'error'
+            ? 'border-sky-500 text-sky-600'
+            : 'text-fg-secondary hover:text-fg-primary border-transparent'
+        ]}
         onclick={() => (activeTab = 'error')}
       >
         Error State
