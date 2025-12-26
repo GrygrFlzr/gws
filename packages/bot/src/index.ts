@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { handleMessage } from './handlers/messageHandler';
 import { createActionExecutor } from './workers/actionExecutor';
 // Import to start workers
@@ -13,12 +13,12 @@ const client = new Client({
   ]
 });
 
-client.on('messageCreate', handleMessage);
-client.on('messageUpdate', (_, newMsg) => handleMessage(newMsg));
+client.on(Events.MessageCreate, handleMessage);
+client.on(Events.MessageUpdate, (_, newMsg) => handleMessage(newMsg));
 
 // Start workers
-client.on('clientReady', () => {
-  console.log(`Logged in as ${client.user?.tag}`);
+client.on(Events.ClientReady, () => {
+  console.log(`Logged in as ${client.user?.username}`);
 
   // Start action executor worker
   createActionExecutor(client);
