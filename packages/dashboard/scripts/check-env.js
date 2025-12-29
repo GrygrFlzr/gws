@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 
-const envPath = resolve(import.meta.dirname, '../../.env');
+const envPath = resolve(import.meta.dirname, '../../../.env');
 
 const REQUIRED_VARS = ['DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'ORIGIN', 'DATABASE_URL'];
 

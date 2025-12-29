@@ -2,11 +2,13 @@ packages:
   - packages/*
 
 catalog:
+  '@dotenvx/dotenvx': ^1.51.2
   '@ianvs/prettier-plugin-sort-imports': ^4.7.0
   '@types/node': ^24.10.4
   '@types/opossum': ^8.1.9
+  '@vitest/coverage-v8': ^4.0.16
   bufferutil: ^4.1.0
-  bullmq: ^5.66.3
+  bullmq: ^5.66.4
   discord.js: ^14.25.1
   drizzle-kit: ^0.31.8
   drizzle-orm: ^0.45.1
@@ -24,10 +26,12 @@ catalog:
   typescript-eslint: ^8.50.1
   utf-8-validate: ^6.0.6
   vitest: ^4.0.16
-  '@vitest/coverage-v8': ^4.0.16
+
+engineStrict: true
 
 onlyBuiltDependencies:
   - esbuild
   - msgpackr-extract
   - bufferutil
   - utf-8-validate
+  - zlib-sync

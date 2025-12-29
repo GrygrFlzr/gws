@@ -97,11 +97,11 @@ export default defineConfig({
       transform(code, id) {
         if (id.includes('discord.js/src/client/Client.js')) {
           let newCode = code.replace(
-            /_eval\(script\) \{[\s\S]*?return eval\(script\);[\s\S]*?\}/,
+            /_eval\(script\)\s*\{[\s\S]*?return eval\(script\);[\s\S]*?\}/,
             '_eval(script) { throw new Error("eval disabled") }'
           );
           newCode = newCode.replace(
-            /this\.shard = ShardClientUtil\.singleton\(this\);/,
+            /this\.shard = process\.env\.SHARDING_MANAGER[\s\S]*?ShardClientUtil\.singleton[\s\S]*?;/,
             'this.shard = null;'
           );
           return newCode;

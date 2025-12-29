@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file=../../.env --include \"../core/*\" src/index.ts",
+    "dev": "tsx watch --include \"../core/*\" src/index.ts",
     "build": "tsdown",
-    "start": "node --env-file=../../.env dist/index.js",
+    "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vitest run --coverage"
